@@ -56,6 +56,214 @@ host render node explicitly; identify the GPU behind a node using
 The guest sees a virtio GPU and normally uses `/dev/dri/renderD128` even
 when the host renderer is `/dev/dri/renderD129`.
 
+## FreeBSD 15.1 QEMU install with virtio-gpu + Hyprland
+
+This walkthrough starts from the FreeBSD installer ISO and builds the
+driver inside one VM. It uses an x86-64 Linux host and configures virgl
+OpenGL/GLES. The separate [Hardware Vulkan with Venus](#hardware-vulkan-with-venus)
+section covers Vulkan with the development VM helpers.
+
+### 1. Create and boot the VM (Linux host)
+
+Install QEMU with KVM and virgl/EGL support, `qemu-img`, OVMF (UEFI
+firmware), `curl`, and a VNC viewer. Your host account needs access to
+`/dev/kvm` and the selected GPU render node. The example uses
+`/dev/dri/renderD128`. Use `ls -l /dev/dri/by-path` and `lspci -nn` to
+match a render node's PCI address to your Radeon or NVIDIA GPU. The node
+number depends on the host. An empty virtual disk is created in a separate
+directory under `.qemu/`. Download and verify the ISO before booting it.
+[FreeBSD 15.1 installer images and checksums](https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/15.1/)
+
+Run the following from the repository root in a host terminal:
+
+```sh
+mkdir -p .qemu/freebsd-hyprland
+cd .qemu/freebsd-hyprland
+mirror=https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/15.1
+iso=FreeBSD-15.1-RELEASE-amd64-disc1.iso
+checksums=CHECKSUM.SHA256-FreeBSD-15.1-RELEASE-amd64
+curl -fLO "$mirror/$iso"
+curl -fLO "$mirror/$checksums"
+sha256sum --check --ignore-missing "$checksums"
+```
+
+Continue once the ISO reports `OK`. Use the OVMF paths from your Linux
+distribution if they differ. Each VM needs its own writable
+`efi-vars.fd`. Run the following in the same host terminal:
+
+```sh
+test -e disk.qcow2 || qemu-img create -f qcow2 disk.qcow2 64G
+test -e efi-vars.fd || cp /usr/share/OVMF/OVMF_VARS.fd efi-vars.fd
+render_node=/dev/dri/renderD128
+gpu_device=virtio-vga-gl
+
+run_freebsd() {
+    qemu-system-x86_64 -machine q35,accel=kvm -cpu host -smp 4 -m 8G \
+        -drive if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE.fd \
+        -drive if=pflash,format=raw,unit=1,file=efi-vars.fd \
+        -drive file=disk.qcow2,if=virtio,format=qcow2 \
+        -netdev user,id=net0,ipv6=off -device virtio-net-pci,netdev=net0 \
+        -device qemu-xhci -device usb-tablet -device usb-kbd \
+        -vga none -device "$gpu_device,xres=1440,yres=900" \
+        -display "egl-headless,rendernode=$render_node" -vnc 127.0.0.1:12 \
+        "$@"
+}
+
+run_freebsd -cdrom "$iso" -boot once=d -no-reboot
+```
+
+QEMU runs in the foreground. Open your VNC viewer and connect to
+`127.0.0.1` on TCP port `5912` (TigerVNC accepts `127.0.0.1::5912`).
+The `-vga none` option leaves the selected virtio GPU as the only display
+device. You can use `virtio-gpu-gl` instead by setting `gpu_device` before
+launching the VM.
+
+### 2. Install FreeBSD (VNC console)
+
+1. Boot the default FreeBSD option and choose **Install**. Set your
+   keymap and a hostname such as `freebsd-hyprland`.
+2. Choose **Packages (Tech Preview)** for this VM. Choose **Network** if
+   offered and accept the default base components. For networking,
+   choose `vtnet0`, enable IPv4 DHCP, and skip IPv6. QEMU user networking
+   supplies the address and Internet access for packages.
+3. Choose **Auto (UFS)**, select the VM's 64 GB `vtbd0` disk, and use the
+   entire disk with GPT. Confirm the layout and commit the changes.
+   The installer writes to `disk.qcow2` on the host.
+4. Set a root password and add a normal user named `freebsd`. Keep the
+   default login group and enter `wheel video` when invited to add
+   supplementary groups. Choose `sh` as the shell and set a password
+   for this user. Leave the installer services and hardening at their
+   defaults. You can do the whole setup through VNC.
+5. At the end, skip manual configuration and select **Reboot**. The
+   installation QEMU process exits because of `-no-reboot`. In the same
+   host terminal, run `run_freebsd` with no arguments and reconnect
+   VNC. This boots the installed disk with the ISO detached.
+
+See the [FreeBSD Handbook installer screens](https://docs.freebsd.org/en/books/handbook/bsdinstall/)
+for the menus.
+
+### 3. Update FreeBSD and build the modules (guest)
+
+Log in as `freebsd` at the guest's text console. Run `su -` and enter the
+root password to administer the guest. Update the package-based FreeBSD
+installation, install the matching sources and desktop packages, then
+reboot into the updated kernel. If `pkg` asks to bootstrap itself, accept the prompt.
+
+```sh
+pkg update
+pkg upgrade -r FreeBSD-base
+pkg install -r FreeBSD-base FreeBSD-src FreeBSD-src-sys
+pkg install git hyprland foot dejavu dbus seatd mesa-dri glmark2
+shutdown -r now
+```
+
+After the reboot, log in as `freebsd` again and check the running kernel
+and sources. The outputs from `freebsd-version -k` (installed kernel) and
+`freebsd-version -r` (running kernel) should match. The two kernel and
+source package versions should also match each other. Stop and resolve
+any mismatch before building. Reboot if the installed kernel is newer
+than the running one. If the package versions differ, update the base
+packages and install the matching sources from `FreeBSD-base` again.
+
+```sh
+freebsd-version -k
+freebsd-version -r
+pkg query '%n %v' FreeBSD-kernel-generic FreeBSD-src-sys
+test -r /usr/src/sys/conf/kern.opts.mk
+```
+
+Build as `freebsd` using the guest's FreeBSD `make` and compiler:
+
+```sh
+git clone --depth 1 --branch virtio-gpu-nvidia https://github.com/skynet-core/drm-kmod.git ~/drm-kmod
+cd ~/drm-kmod
+make -j "$(sysctl -n hw.ncpu)" SYSDIR=/usr/src/sys KMODS="dmabuf drm virtio"
+```
+
+The three outputs are `dmabuf/dmabuf.ko`, `drm/drm.ko`, and
+`virtio/virtio_gpu_drm.ko`. Build and install them as a set. Rebuild
+against the new sources when you update the guest kernel.
+
+### 4. Install and configure the driver (guest, root)
+
+Run `su -` again, then install the three modules and index them. Use
+these settings once on a fresh install. If a setting already exists in
+`/boot/loader.conf` or `/etc/sysctl.conf`, edit that entry instead.
+
+```sh
+cd /home/freebsd/drm-kmod
+install -d /boot/modules
+install -m 0555 dmabuf/dmabuf.ko drm/drm.ko virtio/virtio_gpu_drm.ko /boot/modules/
+kldxref /boot/modules
+
+# /boot/loader.conf: leave the GPU available to the DRM driver.
+printf '%s\n' 'hint.vtgpu.0.disabled="1"' >> /boot/loader.conf
+
+# /etc/rc.conf: load DRM during system startup and enable desktop services.
+sysrc kld_list+=virtio_gpu_drm
+sysrc dbus_enable=YES seatd_enable=YES
+
+# /etc/sysctl.conf: expose keyboard and mouse input through evdev.
+printf '%s\n' 'kern.evdev.rcpt_mask=12' >> /etc/sysctl.conf
+
+shutdown -r now
+```
+
+Keep the guest's video console enabled so you can log in through VNC.
+The loader hint stops the base `vtgpu` framebuffer from claiming the
+device. `kld_list` loads the DRM module later, when the system is ready.
+Avoid adding a `virtio_gpu_drm_load` entry to `/boot/loader.conf`.
+
+After reboot, `kldstat` should list `virtio_gpu_drm.ko`, and
+`ls -l /dev/dri` should show `card0` and `renderD128`. If the module
+failed to load, check `dmesg | grep -E 'virtio_gpu|linker'` in the guest
+for errors before trying to start Hyprland. If the module
+loaded but `card0` is missing, run `devctl enable vtgpu0` as root and
+check again. If that creates the nodes, add this block to `/etc/rc.local`
+as root so the retry runs after `kld_list` on subsequent boots:
+
+```sh
+if [ ! -c /dev/dri/card0 ]; then
+    devctl enable vtgpu0
+fi
+```
+
+If Hyprland cannot open the GPU or input devices, check that `id` lists
+`video` for your normal user and that `service seatd status` and
+`service dbus status` report running services. If `video` is missing,
+run `pw groupmod video -m freebsd` as root and log out and back in.
+
+### 5. Start Hyprland and verify acceleration (guest, normal user)
+
+Log in as `freebsd` directly at the VNC text console. This gives the
+session an active virtual terminal and sets `XDG_RUNTIME_DIR`. The
+minimal Lua configuration below works with Hyprland 0.55 and newer. It
+opens the Foot terminal automatically and binds Super+Enter to open
+another and Super+M to exit. [Hyprland configuration reference](https://wiki.hypr.land/0.57.0/configuring/core/)
+
+```sh
+mkdir -p ~/.config/hypr
+cat > ~/.config/hypr/qemu.lua <<'LUA'
+hl.monitor({ output = "", mode = "preferred", position = "auto", scale = 1 })
+hl.on("hyprland.start", function()
+    hl.exec_cmd("foot")
+end)
+hl.bind("SUPER + Return", hl.dsp.exec_cmd("foot"))
+hl.bind("SUPER + M", hl.dsp.exit())
+LUA
+
+env LIBSEAT_BACKEND=seatd AQ_DRM_DEVICES=/dev/dri/card0 \
+    dbus-run-session start-hyprland -- --config "$HOME/.config/hypr/qemu.lua"
+```
+
+In the Foot window, run `glmark2-wayland --size 640x480`. The benchmark
+should display animated scenes and report `GL_RENDERER: virgl (...)` with
+the selected host GPU in the terminal. A renderer containing `llvmpipe`
+or `softpipe` indicates CPU rendering. Check that QEMU started with a
+`-gl` device and the intended host render node. To switch GPU models or
+host nodes later, shut down the guest before changing `gpu_device` or
+`render_node` in the host terminal.
+
 ## Build and deploy
 
 ```sh
