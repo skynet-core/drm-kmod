@@ -6,6 +6,9 @@ verified, shared read-only, and backed by separate 100 GB qcow2 overlays.
 Disks, firmware variables, SSH identities, build artifacts and logs live
 under the ignored `.qemu/` directory. Set `QEMU_STATE` to move this directory.
 
+For a developer's introduction to rendering, display control, and how a draw
+travels from FreeBSD to the host GPU, see [How graphics works in a FreeBSD 15.1 QEMU guest](graphics-stack.md).
+
 See the [recorded test results and screenshots](results/README.md) for the
 Radeon/NVIDIA KASAN and KMSAN desktop matrix.
 
