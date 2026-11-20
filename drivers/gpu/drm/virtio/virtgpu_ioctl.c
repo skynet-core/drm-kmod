@@ -445,6 +445,9 @@ static int verify_blob(struct virtio_gpu_device *vgdev,
 	if (!vgdev->has_resource_blob)
 		return -EINVAL;
 
+	if (!rc_blob->size || rc_blob->size > ULONG_MAX - (PAGE_SIZE - 1))
+		return -EINVAL;
+
 	if (rc_blob->blob_flags & ~VIRTGPU_BLOB_FLAG_USE_MASK)
 		return -EINVAL;
 
@@ -461,6 +464,10 @@ static int verify_blob(struct virtio_gpu_device *vgdev,
 		*guest_blob = true;
 		fallthrough;
 	case VIRTGPU_BLOB_MEM_HOST3D:
+		if ((rc_blob->blob_flags & VIRTGPU_BLOB_FLAG_USE_MAPPABLE) &&
+		    (!vgdev->has_host_visible ||
+		     rc_blob->size > vgdev->host_visible_region.len))
+			return -EINVAL;
 		*host3d_blob = true;
 		break;
 	default:
@@ -546,14 +553,14 @@ static int virtio_gpu_resource_create_blob_ioctl(struct drm_device *dev,
 	if (params.blob_flags & VIRTGPU_BLOB_FLAG_USE_CROSS_DEVICE) {
 		ret = virtio_gpu_resource_assign_uuid(vgdev, bo);
 		if (ret) {
-			drm_gem_object_release(obj);
+			drm_gem_object_put(obj);
 			return ret;
 		}
 	}
 
 	ret = drm_gem_handle_create(file, obj, &handle);
 	if (ret) {
-		drm_gem_object_release(obj);
+		drm_gem_object_put(obj);
 		return ret;
 	}
 

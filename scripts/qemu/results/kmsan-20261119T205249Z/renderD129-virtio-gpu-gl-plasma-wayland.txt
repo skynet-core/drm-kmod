@@ -1,0 +1,26 @@
+FreeBSD virtio GPU acceleration verification
+Thu Nov 19 20:57:11 UTC 2026
+Host: NVIDIA /dev/dri/renderD129
+Device: virtio-gpu-gl
+Sanitizer: kmsan
+FreeBSD 15.1-RELEASE-p7 VIRTGPU-KMSAN
+
+Session: wayland
+
+direct rendering: Yes
+    Device: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2) (0x1010)
+    Accelerated: yes
+OpenGL vendor string: Mesa
+OpenGL renderer string: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+OpenGL core profile version string: 4.2 (Core Profile) Mesa 26.2.2
+OpenGL core profile shading language version string: 4.20
+OpenGL version string: 4.2 (Compatibility Profile) Mesa 26.2.2
+OpenGL shading language version string: 4.20
+OpenGL ES profile version string: OpenGL ES 3.2 Mesa 26.2.2
+OpenGL ES profile shading language version string: OpenGL ES GLSL ES 3.20
+EGL 1.5
+GL_VENDOR: Mesa
+GL_RENDERER: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+Desktop and GPU test logs: ~/drm-test/

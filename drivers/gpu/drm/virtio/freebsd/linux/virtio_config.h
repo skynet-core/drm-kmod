@@ -28,20 +28,12 @@ void	lkpi_virtio_cwrite_bytes(struct virtio_device *vdev,
 	lkpi_virtio_cwrite_bytes((vdev), offsetof(structname, member),	\
 	    (ptr), sizeof(*(ptr)))
 
-/*
- * Shared-memory regions (VIRTIO_GPU_F_RESOURCE_BLOB / host-visible):
- * rejected by this 2D-only port, so the probe just reports absence.
- */
 struct virtio_shm_region {
 	u64 addr;
 	u64 len;
 };
 
-static inline bool
-virtio_get_shm_region(struct virtio_device *vdev,
-    struct virtio_shm_region *region, u8 id)
-{
-	return (false);
-}
+bool	virtio_get_shm_region(struct virtio_device *vdev,
+	    struct virtio_shm_region *region, u8 id);
 
 #endif /* _LINUX_VIRTIO_CONFIG_H */

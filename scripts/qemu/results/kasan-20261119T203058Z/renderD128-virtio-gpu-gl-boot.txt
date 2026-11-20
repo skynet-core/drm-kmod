@@ -1,0 +1,23 @@
+FreeBSD 15.1-RELEASE-p7 VIRTGPU-KASAN
+15.1-RELEASE-p7
+15.1-RELEASE-p7
+15.1-RELEASE-p7
+15.1-RELEASE-p7
+mode=kasan
+SHA256 (dmabuf/dmabuf.ko) = 7a2f3ea29a0b6f6988872c433786a9da582ac9db625309d965c8d222fb708db3
+SHA256 (drm/drm.ko) = f9aacc8fb6f7c262a29f9870ea438698f6f17a25599b54be3f3b018f653c7654
+SHA256 (virtio/virtio_gpu_drm.ko) = 73180b4ddebd49b76598665af59385e6d7fcd3c0e8e00603aa21af056b176b0a
+Id Refs Address                Size Name
+ 1   46 0xffffffff80200000  3f12100 kernel
+ 2    1 0xffffffff84818000    1da88 virtio_gpu_drm.ko
+ 3    1 0xffffffff84836000   158e40 drm.ko
+ 4    1 0xffffffff8498f000     3ab8 iic.ko
+ 5    1 0xffffffff84993000     b290 linuxkpi_video.ko
+ 6    2 0xffffffff8499f000    10dc0 dmabuf.ko
+ 7    1 0xffffffff849b0000     56e8 lindebugfs.ko
+ 8    1 0xffffffff849b6000     2e38 hms.ko
+ 9    1 0xffffffff849b9000     5960 hidmap.ko
+10    1 0xffffffff849bf000     7a70 ichsmb.ko
+11    1 0xffffffff849c7000     29e8 smbus.ko
+12    1 0xffffffff849ca000     30b0 virtio_random.ko
+dev.virtio_gpu_drm.0.queue_state: ctrl nfree=256 nused=0 | cursor nfree=16 nused=0

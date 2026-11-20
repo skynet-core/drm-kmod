@@ -30,6 +30,7 @@ struct fbsd_vq;		/* really: FreeBSD struct virtqueue */
 int	 fbsd_gpu_alloc_vqs(device_t dev, int nvqs, void *lvqs[],
 	    const char *names[], struct fbsd_vq *vqs[]);
 void	 fbsd_gpu_device_ready(device_t dev);
+bool	 fbsd_gpu_hostmem(device_t dev, uint64_t *start, uint64_t *size);
 void	 fbsd_gpu_read_config(device_t dev, unsigned int offset, void *dst,
 	    int len);
 void	 fbsd_gpu_write_config(device_t dev, unsigned int offset, void *src,

@@ -1,0 +1,30 @@
+FreeBSD virtio GPU acceleration verification
+Fri Nov 20 08:32:23 UTC 2026
+Host: AMD Radeon /dev/dri/renderD128
+Device: virtio-gpu-gl
+Sanitizer: kasan
+FreeBSD 15.1-RELEASE-p7 VIRTGPU-KASAN
+
+Session: x11
+
+direct rendering: Yes
+    Device: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...) (0x1010)
+    Accelerated: yes
+OpenGL vendor string: Mesa
+OpenGL renderer string: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+OpenGL core profile version string: 4.6 (Core Profile) Mesa 26.2.2
+OpenGL core profile shading language version string: 4.60
+OpenGL version string: 4.6 (Compatibility Profile) Mesa 26.2.2
+OpenGL shading language version string: 4.60
+OpenGL ES profile version string: OpenGL ES 3.2 Mesa 26.2.2
+OpenGL ES profile shading language version string: OpenGL ES GLSL ES 3.20
+EGL 1.5
+GL_VENDOR: Mesa
+GL_RENDERER: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+	deviceType         = PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU
+	deviceName         = Virtio-GPU Venus (AMD Ryzen 9 9950X3D 16-Core Processor (RADV RAPHAEL_MENDOCINO))
+PASS: 120 Vulkan GPU writes with full readback
+PASS: 120 Vulkan cube frames presented via xcb
+Desktop and GPU test logs: ~/drm-test/

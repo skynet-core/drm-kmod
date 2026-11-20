@@ -1,0 +1,98 @@
+[
+  {
+    "case": "renderD128-virtio-gpu-gl-hyprland",
+    "result": "pass",
+    "vulkan_vendor": "0x1002",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "d168a20d62b68fd45a53016c39d77d097b33ac17f4ee0be7629e5a5215e1e235"
+  },
+  {
+    "case": "renderD128-virtio-gpu-gl-plasma-wayland",
+    "result": "pass",
+    "vulkan_vendor": "0x1002",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "c4f0cc9ba1c666cd3d9d5162c8d93927e3f8214c880612f2fe741ee032c06e8c"
+  },
+  {
+    "case": "renderD128-virtio-gpu-gl-plasma-x11",
+    "result": "pass",
+    "vulkan_vendor": "0x1002",
+    "wsi": "xcb",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "360d5d59e9d957b6fb7c61d55252adbec2b9195cc13dde58cdb8f8e2a0803669"
+  },
+  {
+    "case": "renderD128-virtio-vga-gl-hyprland",
+    "result": "pass",
+    "vulkan_vendor": "0x1002",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "d911c0678b3f22ba02e698084a9263c8188458c1112e3c937595c781167a60a2"
+  },
+  {
+    "case": "renderD128-virtio-vga-gl-plasma-wayland",
+    "result": "pass",
+    "vulkan_vendor": "0x1002",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "6ba05fca685c5ee0727d391f086752a62bdeabe48361046fbfd77f15eee2c299"
+  },
+  {
+    "case": "renderD128-virtio-vga-gl-plasma-x11",
+    "result": "pass",
+    "vulkan_vendor": "0x1002",
+    "wsi": "xcb",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "a1a567dd9cc21436d796b045fecb7f391fa29a2bfeb4fa9a9360c6facf558165"
+  },
+  {
+    "case": "renderD129-virtio-gpu-gl-hyprland",
+    "result": "pass",
+    "vulkan_vendor": "0x10de",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 1,
+    "screenshot_sha256": "5b6a2aa3c9cd523e6b61f09d4f812fc51392148b691c633eeabacee148f96d90"
+  },
+  {
+    "case": "renderD129-virtio-gpu-gl-plasma-wayland",
+    "result": "pass",
+    "vulkan_vendor": "0x10de",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 1,
+    "screenshot_sha256": "052c0633647f6119854b23b27029960207b2ee70302810c0941bdaa0a38b7e24"
+  },
+  {
+    "case": "renderD129-virtio-gpu-gl-plasma-x11",
+    "result": "pass",
+    "vulkan_vendor": "0x10de",
+    "wsi": "xcb",
+    "witness_device_pager_reports": 1,
+    "screenshot_sha256": "bbb939c81f85e3e4134faa996f769ac04c2b6bda92d9fd021ca41a9a7c8b37ab"
+  },
+  {
+    "case": "renderD129-virtio-vga-gl-hyprland",
+    "result": "pass",
+    "vulkan_vendor": "0x10de",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "8976e36826cbdb1733ea96ab423dc24a767a809f6643df28bcc6c2965e5be503"
+  },
+  {
+    "case": "renderD129-virtio-vga-gl-plasma-wayland",
+    "result": "pass",
+    "vulkan_vendor": "0x10de",
+    "wsi": "wayland",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "ae27d0b300788b55bc07764735c3fe962df908dae7a7ed664a9a93510f67095d"
+  },
+  {
+    "case": "renderD129-virtio-vga-gl-plasma-x11",
+    "result": "pass",
+    "vulkan_vendor": "0x10de",
+    "wsi": "xcb",
+    "witness_device_pager_reports": 0,
+    "screenshot_sha256": "4056d7a0527d307ba574841ca4563a9b69b4fdb0b5d05039f0229cf1386ed031"
+  }
+]

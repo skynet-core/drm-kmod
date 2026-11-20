@@ -14,6 +14,7 @@
 #include <sys/bus.h>
 #include <sys/kernel.h>
 #include <sys/module.h>
+#include <sys/rman.h>
 #include <sys/sglist.h>
 #include <sys/sysctl.h>
 
@@ -21,6 +22,7 @@
 #include <vm/pmap.h>
 
 #include <machine/bus.h>
+#include <machine/resource.h>
 
 #include <dev/pci/pcireg.h>
 #include <dev/pci/pcivar.h>
@@ -36,10 +38,17 @@
 
 #include "freebsd/virtgpu_freebsd.h"
 
-/* EDID, classic virgl 3D, and indirect descriptors (VIRTGPU_MAX_INDIRECT). */
+/* Negotiate blobs only if the host-visible BAR is reserved. */
 #define	VGD_FEATURES	((1ULL << VIRTIO_GPU_F_EDID) | \
 			    (1ULL << VIRTIO_GPU_F_VIRGL) | \
+			    (1ULL << VIRTIO_GPU_F_CONTEXT_INIT) | \
 			    VIRTIO_RING_F_INDIRECT_DESC)
+#define	VGD_BLOB_FEATURE	(1ULL << VIRTIO_GPU_F_RESOURCE_BLOB)
+
+/* Virtio PCI shared memory uses the 24-byte virtio_pci_cap64 layout. */
+#define	VGD_PCI_CAP_SHARED_MEMORY	8
+#define	VGD_PCI_CAP64_SIZE		24
+#define	VGD_SHM_HOST_VISIBLE		1
 
 /* gates MOD_QUIESCE */
 static u_int vgd_ndevs;
@@ -53,7 +62,78 @@ struct virtio_gpu_drm_softc {
 	bus_size_t	 vgd_notify_off[VIRTGPU_NVQS];
 	int		 vgd_notify_ok;
 	int		 vgd_attached;		/* upstream probe succeeded */
+	struct resource	*vgd_hostmem;
+	uint64_t	 vgd_hostmem_start;
+	uint64_t	 vgd_hostmem_size;
 };
+
+static void
+vgd_reserve_hostmem(struct virtio_gpu_drm_softc *sc)
+{
+	device_t parent = device_get_parent(sc->vgd_dev);
+	struct resource *res;
+	uint64_t offset, length, size;
+	int cap, bar, rid, error;
+
+	for (error = pci_find_cap(parent, PCIY_VENDOR, &cap); error == 0;
+	    error = pci_find_next_cap(parent, PCIY_VENDOR, cap, &cap)) {
+		if (cap > 256 - VGD_PCI_CAP64_SIZE ||
+		    pci_read_config(parent, cap + 2, 1) < VGD_PCI_CAP64_SIZE ||
+		    pci_read_config(parent, cap + 3, 1) !=
+		    VGD_PCI_CAP_SHARED_MEMORY ||
+		    pci_read_config(parent, cap + 5, 1) != VGD_SHM_HOST_VISIBLE)
+			continue;
+
+		bar = pci_read_config(parent, cap + 4, 1);
+		if (bar >= 6)
+			return;
+		rid = PCIR_BAR(bar);
+		offset = pci_read_config(parent, cap + 8, 4) |
+		    (uint64_t)pci_read_config(parent, cap + 16, 4) << 32;
+		length = pci_read_config(parent, cap + 12, 4) |
+		    (uint64_t)pci_read_config(parent, cap + 20, 4) << 32;
+		if (length == 0 || ((offset | length) & PAGE_MASK) != 0)
+			return;
+
+		/* Reserve the BAR without mapping the entire aperture in KVA. */
+		res = bus_alloc_resource_any(parent, SYS_RES_MEMORY, &rid, 0);
+		if (res == NULL)
+			return;
+		size = rman_get_size(res);
+		if (offset > size || length > size - offset ||
+		    rman_get_start(res) == 0 ||
+		    (rman_get_start(res) & PAGE_MASK) != 0) {
+			bus_release_resource(parent, res);
+			return;
+		}
+		sc->vgd_hostmem = res;
+		sc->vgd_hostmem_start = rman_get_start(res) + offset;
+		sc->vgd_hostmem_size = length;
+		return;
+	}
+}
+
+static void
+vgd_release_hostmem(struct virtio_gpu_drm_softc *sc)
+{
+	if (sc->vgd_hostmem != NULL) {
+		bus_release_resource(device_get_parent(sc->vgd_dev),
+		    sc->vgd_hostmem);
+		sc->vgd_hostmem = NULL;
+	}
+}
+
+bool
+fbsd_gpu_hostmem(device_t dev, uint64_t *start, uint64_t *size)
+{
+	struct virtio_gpu_drm_softc *sc = device_get_softc(dev);
+
+	if ((sc->vgd_features & VGD_BLOB_FEATURE) == 0)
+		return (false);
+	*start = sc->vgd_hostmem_start;
+	*size = sc->vgd_hostmem_size;
+	return (true);
+}
 
 int
 fbsd_vq_enqueue(struct fbsd_vq *vq, void *cookie, struct sglist *sg,
@@ -247,6 +327,7 @@ static int
 virtio_gpu_drm_attach(device_t dev)
 {
 	struct virtio_gpu_drm_softc *sc;
+	uint64_t features;
 	int error;
 
 	sc = device_get_softc(dev);
@@ -257,10 +338,14 @@ virtio_gpu_drm_attach(device_t dev)
 	 * drive the virtio 1.x status sequence ourselves.
 	 */
 	virtio_stop(dev);
-	error = virtio_reinit(dev, VGD_FEATURES);
+	vgd_reserve_hostmem(sc);
+	features = VGD_FEATURES;
+	if (sc->vgd_hostmem != NULL)
+		features |= VGD_BLOB_FEATURE;
+	error = virtio_reinit(dev, features);
 	if (error != 0) {
 		device_printf(dev, "virtio_reinit failed: %d\n", error);
-		return (error);
+		goto fail;
 	}
 	sc->vgd_features = 0;
 	if (virtio_with_feature(dev, VIRTIO_F_VERSION_1))
@@ -269,6 +354,12 @@ virtio_gpu_drm_attach(device_t dev)
 		sc->vgd_features |= 1ULL << VIRTIO_GPU_F_EDID;
 	if (virtio_with_feature(dev, 1ULL << VIRTIO_GPU_F_VIRGL))
 		sc->vgd_features |= 1ULL << VIRTIO_GPU_F_VIRGL;
+	if (virtio_with_feature(dev, VGD_BLOB_FEATURE))
+		sc->vgd_features |= VGD_BLOB_FEATURE;
+	else
+		vgd_release_hostmem(sc);
+	if (virtio_with_feature(dev, 1ULL << VIRTIO_GPU_F_CONTEXT_INIT))
+		sc->vgd_features |= 1ULL << VIRTIO_GPU_F_CONTEXT_INIT;
 	if (virtio_with_feature(dev, VIRTIO_F_IOMMU_PLATFORM))
 		sc->vgd_features |= VIRTIO_F_IOMMU_PLATFORM;
 	if (virtio_with_feature(dev, VIRTIO_RING_F_INDIRECT_DESC))
@@ -285,7 +376,7 @@ virtio_gpu_drm_attach(device_t dev)
 	error = vgd_map_notify(sc);
 	if (error != 0) {
 		device_printf(dev, "notify mapping failed: %d\n", error);
-		return (error);
+		goto fail;
 	}
 
 	sc->vgd_vdev = lkpi_virtio_vdev_create(dev, device_get_parent(dev),
@@ -316,6 +407,7 @@ virtio_gpu_drm_attach(device_t dev)
 	return (0);
 fail:
 	virtio_stop(dev);	/* do not leave DRIVER set without DRIVER_OK */
+	vgd_release_hostmem(sc);
 	if (sc->vgd_notify_ok) {
 		pmap_unmapdev(sc->vgd_notify_va, PAGE_SIZE);
 		sc->vgd_notify_ok = 0;
@@ -337,6 +429,7 @@ virtio_gpu_drm_detach(device_t dev)
 	if (sc->vgd_attached)
 		return (EBUSY);
 	virtio_stop(dev);
+	vgd_release_hostmem(sc);
 	if (sc->vgd_notify_ok) {
 		pmap_unmapdev(sc->vgd_notify_va, PAGE_SIZE);
 		sc->vgd_notify_ok = 0;

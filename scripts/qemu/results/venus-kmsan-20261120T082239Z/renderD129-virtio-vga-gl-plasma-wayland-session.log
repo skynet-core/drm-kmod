@@ -1,0 +1,150 @@
+org.kde.startup: not a reply org.freedesktop.locale1 QDBusMessage(type=Error, service="", error name="org.freedesktop.DBus.Error.ServiceUnknown", error message="The name org.freedesktop.locale1 was not provided by any .service files", signature="s", contents=("The name org.freedesktop.locale1 was not provided by any .service files") )
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.kde.KSplash' requested by ':1.0' (uid=1001 pid=1817 comm="")
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.4' (uid=1001 pid=1826 comm="")
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.6' (uid=1001 pid=1828 comm="")
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.freedesktop.portal.Documents' requested by ':1.6' (uid=1001 pid=1828 comm="")
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.freedesktop.portal.Documents'
+fuse: unknown option(s): `-o auto_unmount'
+error: fuse init failed: Can't create fuse session
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:46.479: Document portal fuse mount point unknown: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name :1.8 was not provided by any .service files
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.freedesktop.impl.portal.desktop.kde' requested by ':1.6' (uid=1001 pid=1828 comm="")
+kwin_vulkan: Device Virtio-GPU Venus (NVIDIA GeForce RTX 3090) misses required Vulkan extensions
+kwin_vulkan: VK_EXT_physical_device_drm
+No backend specified, automatically choosing drm
+kwin_wayland_drm: drmModeListLessees() failed: Invalid argument
+kwin_screencast: Failed to connect PipeWire context
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.kde.KSplash'
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.freedesktop.impl.portal.desktop.kde'
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.475: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.475: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.476: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.490: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.freedesktop.impl.portal.desktop.kwallet' requested by ':1.6' (uid=1001 pid=1828 comm="")
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.freedesktop.portal.Desktop'
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.518: Failed to get pidfd for host process 1834: Unable to pidfd from pid 1834: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.525: Failed to get pidfd for host process 1834: Unable to pidfd from pid 1834: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.655: Failed to get pidfd for host process 1824: Unable to pidfd from pid 1824: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.656: Failed to get pidfd for host process 1824: Unable to pidfd from pid 1824: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for ''")
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Multiple symbols for level 1/group 1 on key <FK23>
+>                   Using F23, ignoring XF86TouchpadOff
+> Warning:          Symbol map for key <FK23> redefined
+>                   Using last definition for conflicting fields
+> Warning:          Symbol map for key <FK24> redefined
+>                   Using last definition for conflicting fields
+> Warning:          Could not resolve keysym XF86ElectronicPrivacyScreenOn
+> Warning:          Could not resolve keysym XF86ElectronicPrivacyScreenOff
+> Warning:          Could not resolve keysym XF86ActionOnSelection
+> Warning:          Could not resolve keysym XF86ContextualInsert
+> Warning:          Could not resolve keysym XF86ContextualQuery
+Errors from xkbcomp are not fatal to the X server
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.freedesktop.impl.portal.desktop.kwallet'
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.738: Failed to get pidfd for host process 1838: Unable to pidfd from pid 1838: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.739: Failed to get pidfd for host process 1838: Unable to pidfd from pid 1838: Inappropriate ioctl for device
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Unsupported maximum keycode 709, clipping.
+>                   X11 cannot support keycodes above 255.
+> Warning:          Virtual modifier Hyper multiply defined
+>                   Using 0, ignoring 0
+> Warning:          Virtual modifier ScrollLock multiply defined
+>                   Using 0, ignoring 0
+Errors from xkbcomp are not fatal to the X server
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.816: Failed to get pidfd for host process 1826: Unable to pidfd from pid 1826: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.816: Failed to get pidfd for host process 1826: Unable to pidfd from pid 1826: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kcminit'")
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.817: Failed to get pidfd for host process 1826: Unable to pidfd from pid 1826: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:47.817: Failed to get pidfd for host process 1826: Unable to pidfd from pid 1826: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kcminit'")
+org.kde.plasma.session: process job  "kcminit_startup" finished with exit code  0
+failed to read client connection (pid 1846)
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.193: Failed to get pidfd for host process 1852: Unable to pidfd from pid 1852: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.194: Failed to get pidfd for host process 1852: Unable to pidfd from pid 1852: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.ksmserver'")
+failed to read client connection (pid 1826)
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.276: Failed to get pidfd for host process 1869: Unable to pidfd from pid 1869: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.277: Failed to get pidfd for host process 1869: Unable to pidfd from pid 1869: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.xembedsniproxy'")
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.282: Failed to get pidfd for host process 1847: Unable to pidfd from pid 1847: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.282: Failed to get pidfd for host process 1847: Unable to pidfd from pid 1847: Inappropriate ioctl for device
+qt.core.qobject.connect: QObject::connect(Solid::OpticalDrive, SolidAutoEject): invalid nullptr parameter
+qt.core.qobject.connect: QObject::connect(Solid::OpticalDrive, SolidAutoEject): invalid nullptr parameter
+qt.core.qobject.connect: QObject::connect(Solid::OpticalDrive, SolidAutoEject): invalid nullptr parameter
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.365: Failed to get pidfd for host process 1872: Unable to pidfd from pid 1872: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.366: Failed to get pidfd for host process 1872: Unable to pidfd from pid 1872: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.gmenudbusmenuproxy'")
+X server XKB extension major= 1  minor= 0
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.419: Failed to get pidfd for host process 1868: Unable to pidfd from pid 1868: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.419: Failed to get pidfd for host process 1868: Unable to pidfd from pid 1868: Inappropriate ioctl for device
+dbus-daemon[1809]: [session uid=1001 pid=1809] Activating service name='org.kde.ActivityManager' requested by ':1.23' (uid=1001 pid=1867 comm="")
+W: [] caps.c: Normally all extra capabilities would be dropped now, but that's impossible because PulseAudio was built without capabilities support.
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.523: Failed to get pidfd for host process 1867: Unable to pidfd from pid 1867: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.523: Failed to get pidfd for host process 1867: Unable to pidfd from pid 1867: Inappropriate ioctl for device
+dbus-daemon[1809]: [session uid=1001 pid=1809] Successfully activated service 'org.kde.ActivityManager'
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.579: Failed to get pidfd for host process 1885: Unable to pidfd from pid 1885: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.579: Failed to get pidfd for host process 1885: Unable to pidfd from pid 1885: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.ActivityManager'")
+failed to read client connection (pid 1878)
+failed to read client connection (pid 1890)
+qt.qml.propertyCache.append: Member visible of the object PlasmaQuick::Dialog overrides a member of the base object. Consider renaming it or adding final or override specifier
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.899: Failed to get pidfd for host process 1877: Unable to pidfd from pid 1877: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:48.900: Failed to get pidfd for host process 1877: Unable to pidfd from pid 1877: No such file or directory
+qt.qml.propertyCache.append: Member enabled of the object DeclarativeDropArea overrides a member of the base object. Consider renaming it or adding final or override specifier
+failed to read client connection (pid 1903)
+failed to read client connection (pid 1903)
+failed to read client connection (pid 1824)
+qt.qml.propertyCache.append: Final member StackingOrder is overridden in class QQmlDMAbstractItemModelData. The override won't be used.
+qrc:/qt/qml/plasma/applet/org/kde/plasma/notifications/global/PulseAudio.qml:9:1: module "org.kde.plasma.private.volume" is not installed
+Connecting to deprecated signal QDBusConnectionInterface::serviceOwnerChanged(QString,QString,QString)
+failed to read client connection (pid 1919)
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:53.055: Failed to get pidfd for host process 1930: Unable to pidfd from pid 1930: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:53.056: Failed to get pidfd for host process 1930: Unable to pidfd from pid 1930: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.baloo'")
+failed to read client connection (pid 1930)
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:53.662: Failed to get pidfd for host process 1931: Unable to pidfd from pid 1931: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:1828): xdg-desktop-portal-WARNING **: 08:29:53.662: Failed to get pidfd for host process 1931: Unable to pidfd from pid 1931: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.baloo'")
+failed to read client connection (pid 1931)
+Configured: ttyu0,gdb
+ Available: ttyu0,ttyv0,gdb
+    Muting: off
+Configured: ttyv0,ttyu0,gdb
+ Available: ttyu0,ttyv0,gdb
+    Muting: off

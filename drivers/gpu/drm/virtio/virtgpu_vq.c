@@ -274,19 +274,18 @@ void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
 /* Create sg_table from a vmalloc'd buffer. */
 static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size, int *sg_ents)
 {
-	int ret, s, i;
+	unsigned int offset = offset_in_page(data);
+	int ret, i;
+	unsigned int s;
 	struct sg_table *sgt;
 	struct scatterlist *sg;
 	struct page *pg;
-
-	if (WARN_ON(!PAGE_ALIGNED(data)))
-		return NULL;
 
 	sgt = kmalloc(sizeof(*sgt), GFP_KERNEL);
 	if (!sgt)
 		return NULL;
 
-	*sg_ents = DIV_ROUND_UP(size, PAGE_SIZE);
+	*sg_ents = DIV_ROUND_UP((size_t)size + offset, PAGE_SIZE);
 	ret = sg_alloc_table(sgt, *sg_ents, GFP_KERNEL);
 	if (ret) {
 		kfree(sgt);
@@ -301,11 +300,12 @@ static struct sg_table *vmalloc_to_sgt(char *data, uint32_t size, int *sg_ents)
 			return NULL;
 		}
 
-		s = min_t(int, PAGE_SIZE, size);
-		sg_set_page(sg, pg, s, 0);
+		s = min_t(unsigned int, PAGE_SIZE - offset, size);
+		sg_set_page(sg, pg, s, offset);
 
 		size -= s;
 		data += s;
+		offset = 0;
 	}
 
 	return sgt;
@@ -1187,7 +1187,8 @@ static void virtio_gpu_cmd_resource_map_cb(struct virtio_gpu_device *vgdev,
 	spin_lock(&vgdev->host_visible_lock);
 
 	if (resp_type == VIRTIO_GPU_RESP_OK_MAP_INFO) {
-		vram->map_info = resp->map_info;
+		vram->map_info = le32_to_cpu(resp->map_info) &
+		    VIRTIO_GPU_MAP_CACHE_MASK;
 		vram->map_state = STATE_OK;
 	} else {
 		vram->map_state = STATE_ERR;

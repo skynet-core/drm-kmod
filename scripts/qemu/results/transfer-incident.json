@@ -1,0 +1,14 @@
+{
+  "status": "not reproduced; root cause unknown",
+  "context": "Initial KMSAN archive upload while KASAN/NVIDIA Plasma X11 3D was active",
+  "archive_bytes": 422012522,
+  "expected_sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+  "received_sha256": "be4278b89386c688bb533f4d0a028dc28ee71bff4736a6a91f85f753b259fa9e",
+  "byte_differences": [
+    {"offset": 96326562, "expected": 177, "received": 161},
+    {"offset": 96326566, "expected": 227, "received": 243}
+  ],
+  "consequence": "Invalid extraction left old KASAN DRM modules alongside the KMSAN kernel; module loading failed. This attempt is excluded from coverage.",
+  "mitigation": "Verify archive SHA256 before extraction and verify all installed module hashes before reboot; verify builder downloads too.",
+  "followup": "12 checksum-verified transfers of the same archive under NVIDIA Plasma X11 3D load: six KMSAN and six KASAN, all matched."
+}

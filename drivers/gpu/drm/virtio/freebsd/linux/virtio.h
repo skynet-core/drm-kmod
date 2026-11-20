@@ -48,9 +48,6 @@ struct virtio_device {
 	struct virtqueue *vqs[2];
 };
 
-/* Dead path: virtio_get_shm_region() always reports absence. */
-#define	devm_request_mem_region(dev, start, n, name)	((void *)0)
-
 struct virtqueue {
 	struct virtio_device *vdev;
 	void (*callback)(struct virtqueue *vq);
@@ -111,8 +108,8 @@ struct virtio_driver {
 #define	MODULE_DEVICE_TABLE_BUS_virtio(_bus, _table)
 
 #ifndef	pci_is_vga
-/* virtio-gpu-pci is class DISPLAY_OTHER, never VGA. */
-#define	pci_is_vga(pdev)	false
+/* virtio-vga and virtio-gpu-pci have different display subclasses. */
+#define	pci_is_vga(pdev)	(((pdev)->class >> 8) == PCI_CLASS_DISPLAY_VGA)
 #endif
 
 int	virtqueue_add_sgs(struct virtqueue *vq, struct scatterlist *sgs[],

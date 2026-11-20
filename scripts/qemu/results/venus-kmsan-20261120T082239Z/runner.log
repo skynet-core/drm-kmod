@@ -1,0 +1,60 @@
+Results: scripts/qemu/results/venus-kmsan-20261120T082239Z
+kernel: kernel.kmsan -> kernel.kmsan
+console: comconsole -> comconsole
+kld_list: virtio_gpu_drm -> virtio_gpu_drm
+15.1-RELEASE-p7
+15.1-RELEASE-p7
+mode=kmsan
+SHA256 (dmabuf/dmabuf.ko) = 4072e6020db9e131409ff6ca33dd8726cdaa32176c77adb2c43737434afc72b1
+SHA256 (drm/drm.ko) = a3d7b04fc42d467ab21135d37cd85b9ebd8fddd9ad92de3ce7ce586e22271e5a
+SHA256 (virtio/virtio_gpu_drm.ko) = 03d4ca5b97462966e753f4a127a0ef32a9ee8e9827cea9882589cb1ce56298a1
+{}
+freebsd-test stopped
+freebsd-test started; SSH localhost:2223; logs in .qemu/freebsd-test
+Testing kmsan / /dev/dri/renderD128 / virtio-gpu-gl / hyprland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-gpu-gl-hyprland.png: 1440x900
+PASS kmsan / /dev/dri/renderD128 / virtio-gpu-gl / hyprland
+Testing kmsan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-wayland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-gpu-gl-plasma-wayland.png: 1440x900
+PASS kmsan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-wayland
+Testing kmsan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-x11
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-gpu-gl-plasma-x11.png: 1440x900
+WITNESS device pager warning: scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-gpu-gl-plasma-x11-dmesg.log
+PASS kmsan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-x11
+{}
+freebsd-test stopped
+freebsd-test started; SSH localhost:2223; logs in .qemu/freebsd-test
+Testing kmsan / /dev/dri/renderD128 / virtio-vga-gl / hyprland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-vga-gl-hyprland.png: 1440x900
+PASS kmsan / /dev/dri/renderD128 / virtio-vga-gl / hyprland
+Testing kmsan / /dev/dri/renderD128 / virtio-vga-gl / plasma-wayland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-vga-gl-plasma-wayland.png: 1440x900
+PASS kmsan / /dev/dri/renderD128 / virtio-vga-gl / plasma-wayland
+Testing kmsan / /dev/dri/renderD128 / virtio-vga-gl / plasma-x11
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD128-virtio-vga-gl-plasma-x11.png: 1440x900
+PASS kmsan / /dev/dri/renderD128 / virtio-vga-gl / plasma-x11
+{}
+freebsd-test stopped
+freebsd-test started; SSH localhost:2223; logs in .qemu/freebsd-test
+Testing kmsan / /dev/dri/renderD129 / virtio-gpu-gl / hyprland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD129-virtio-gpu-gl-hyprland.png: 1440x900
+PASS kmsan / /dev/dri/renderD129 / virtio-gpu-gl / hyprland
+Testing kmsan / /dev/dri/renderD129 / virtio-gpu-gl / plasma-wayland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD129-virtio-gpu-gl-plasma-wayland.png: 1440x900
+PASS kmsan / /dev/dri/renderD129 / virtio-gpu-gl / plasma-wayland
+Testing kmsan / /dev/dri/renderD129 / virtio-gpu-gl / plasma-x11
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD129-virtio-gpu-gl-plasma-x11.png: 1440x900
+PASS kmsan / /dev/dri/renderD129 / virtio-gpu-gl / plasma-x11
+{}
+freebsd-test stopped
+freebsd-test started; SSH localhost:2223; logs in .qemu/freebsd-test
+Testing kmsan / /dev/dri/renderD129 / virtio-vga-gl / hyprland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD129-virtio-vga-gl-hyprland.png: 1440x900
+PASS kmsan / /dev/dri/renderD129 / virtio-vga-gl / hyprland
+Testing kmsan / /dev/dri/renderD129 / virtio-vga-gl / plasma-wayland
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD129-virtio-vga-gl-plasma-wayland.png: 1440x900
+PASS kmsan / /dev/dri/renderD129 / virtio-vga-gl / plasma-wayland
+Testing kmsan / /dev/dri/renderD129 / virtio-vga-gl / plasma-x11
+scripts/qemu/results/venus-kmsan-20261120T082239Z/renderD129-virtio-vga-gl-plasma-x11.png: 1440x900
+PASS kmsan / /dev/dri/renderD129 / virtio-vga-gl / plasma-x11
+Completed all 12 combinations: scripts/qemu/results/venus-kmsan-20261120T082239Z

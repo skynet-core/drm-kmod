@@ -83,3 +83,4 @@ virtio/x86
 virtio/machine
 virtio/export_syms
 *.kld
+.qemu/

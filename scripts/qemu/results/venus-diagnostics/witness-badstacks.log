@@ -1,0 +1,22 @@
+Number of known direct relationships is 968
+
+Lock order reversal between "btag lock"(sleep mutex) and "vmobject"(rw)!
+Lock order "vmobject"(rw) -> "btag lock"(sleep mutex) first seen at:
+#0 0xffffffff813035c2 at witness_checkorder+0x632
+#1 0xffffffff811ce9fc at __mtx_lock_flags+0x13c
+#2 0xffffffff812fbd6a at vmem_bt_alloc+0x9a
+#3 0xffffffff81906317 at keg_alloc_slab+0x197
+#4 0xffffffff81909928 at zone_import+0x288
+#5 0xffffffff8190d9a2 at cache_alloc+0x5a2
+#6 0xffffffff8190289a at cache_alloc_retry+0x2a
+#7 0xffffffff81300a5b at _bt_fill+0x13b
+#8 0xffffffff812fd20f at vmem_xalloc+0x4ef
+#9 0xffffffff812fccbd at vmem_alloc+0xfd
+#10 0xffffffff8191bf67 at kmem_malloc_domainset+0x1b7
+#11 0xffffffff81906317 at keg_alloc_slab+0x197
+#12 0xffffffff81909928 at zone_import+0x288
+#13 0xffffffff8190d9a2 at cache_alloc+0x5a2
+#14 0xffffffff8190289a at cache_alloc_retry+0x2a
+#15 0xffffffff8190e320 at bucket_alloc+0x100
+#16 0xffffffff81903da2 at cache_free+0x272
+#17 0xffffffff8190247f at uma_zfree_arg+0x32f

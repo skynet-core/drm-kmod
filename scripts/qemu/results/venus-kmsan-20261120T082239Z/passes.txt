@@ -1,0 +1,12 @@
+PASS kmsan / /dev/dri/renderD128 / virtio-gpu-gl / hyprland
+PASS kmsan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-wayland
+PASS kmsan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-x11
+PASS kmsan / /dev/dri/renderD128 / virtio-vga-gl / hyprland
+PASS kmsan / /dev/dri/renderD128 / virtio-vga-gl / plasma-wayland
+PASS kmsan / /dev/dri/renderD128 / virtio-vga-gl / plasma-x11
+PASS kmsan / /dev/dri/renderD129 / virtio-gpu-gl / hyprland
+PASS kmsan / /dev/dri/renderD129 / virtio-gpu-gl / plasma-wayland
+PASS kmsan / /dev/dri/renderD129 / virtio-gpu-gl / plasma-x11
+PASS kmsan / /dev/dri/renderD129 / virtio-vga-gl / hyprland
+PASS kmsan / /dev/dri/renderD129 / virtio-vga-gl / plasma-wayland
+PASS kmsan / /dev/dri/renderD129 / virtio-vga-gl / plasma-x11

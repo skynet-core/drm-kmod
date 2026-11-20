@@ -175,6 +175,7 @@ dma_fence_chain_init(struct dma_fence_chain *chain,
 
 	spin_lock_init(&chain->lock);
 	chain->fence = fence;
+	chain->prev_seqno = 0;
 	rcu_assign_pointer(chain->prev, prev);
 	prev_chain = to_dma_fence_chain(prev);
 	if (prev_chain != NULL &&

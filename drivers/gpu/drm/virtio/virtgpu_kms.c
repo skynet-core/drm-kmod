@@ -104,7 +104,7 @@ static void virtio_gpu_get_capsets(struct virtio_gpu_device *vgdev,
 			return;
 		}
 
-		vgdev->capset_id_mask |= 1 << vgdev->capsets[i].id;
+		vgdev->capset_id_mask |= 1ULL << vgdev->capsets[i].id;
 		DRM_INFO("cap set %d: id %d, max-version %d, max-size %d\n",
 			 i, vgdev->capsets[i].id,
 			 vgdev->capsets[i].max_version,
@@ -176,6 +176,8 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 	}
 	if (virtio_get_shm_region(vgdev->vdev, &vgdev->host_visible_region,
 				  VIRTIO_GPU_SHM_ID_HOST_VISIBLE)) {
+		/* FreeBSD reserves the window before negotiating blob resources. */
+#ifdef __linux__
 		if (!devm_request_mem_region(&vgdev->vdev->dev,
 					     vgdev->host_visible_region.addr,
 					     vgdev->host_visible_region.len,
@@ -185,6 +187,7 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 			goto err_vqs;
 		}
 
+#endif
 		DRM_INFO("Host memory window: 0x%lx +0x%lx\n",
 			 (unsigned long)vgdev->host_visible_region.addr,
 			 (unsigned long)vgdev->host_visible_region.len);

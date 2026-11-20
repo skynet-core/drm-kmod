@@ -1,0 +1,53 @@
+--- a/src/vulkan/wsi/wsi_common_wayland.c
++++ b/src/vulkan/wsi/wsi_common_wayland.c
+@@ -288,0 +289 @@
++#ifdef CLOCK_MONOTONIC_RAW
+@@ -290,0 +292 @@
++#endif
+@@ -302,0 +305 @@
++#ifdef CLOCK_MONOTONIC_RAW
+@@ -304,0 +308 @@
++#endif
+@@ -2130 +2134,5 @@
+-         if (clock_id != CLOCK_MONOTONIC && clock_id != CLOCK_MONOTONIC_RAW)
++         if (clock_id != CLOCK_MONOTONIC
++#ifdef CLOCK_MONOTONIC_RAW
++             && clock_id != CLOCK_MONOTONIC_RAW
++#endif
++            )
+--- a/src/virtio/vulkan/vn_common.h
++++ b/src/virtio/vulkan/vn_common.h
+@@ -55,0 +56,3 @@
++#if DETECT_OS_FREEBSD
++#include <pthread_np.h>
++#endif
+@@ -648 +651 @@
+-   return syscall(SYS_thr_self);
++   return pthread_getthreadid_np();
+--- a/src/vulkan/wsi/wsi_common.h
++++ b/src/vulkan/wsi/wsi_common.h
+@@ -97,0 +98 @@
++   uint32_t prime_buffer_stride_alignment;
+--- a/src/vulkan/wsi/wsi_common_drm.c
++++ b/src/vulkan/wsi/wsi_common_drm.c
+@@ -880 +880 @@
+-wsi_configure_prime_image(UNUSED const struct wsi_swapchain *chain,
++wsi_configure_prime_image(const struct wsi_swapchain *chain,
+@@ -897,3 +897,4 @@
+-   wsi_configure_buffer_image(chain, pCreateInfo,
+-                              WSI_PRIME_LINEAR_STRIDE_ALIGN, 4096,
+-                              info);
++   uint32_t stride_align = chain->wsi->prime_buffer_stride_alignment;
++   if (!stride_align)
++      stride_align = WSI_PRIME_LINEAR_STRIDE_ALIGN;
++   wsi_configure_buffer_image(chain, pCreateInfo, stride_align, 4096, info);
+--- a/src/virtio/vulkan/vn_wsi.c
++++ b/src/virtio/vulkan/vn_wsi.c
+@@ -187,0 +188,7 @@
++
++   /* NVIDIA EGL samples linear PRIME buffers at a 32-byte pitch
++    * alignment, ignoring the explicit pitch when virgl binds the image.
++    * See https://gitlab.freedesktop.org/virgl/virglrenderer/-/issues/651.
++    */
++   if (physical_dev->renderer_driver_id == VK_DRIVER_ID_NVIDIA_PROPRIETARY)
++      physical_dev->wsi_device.prime_buffer_stride_alignment = 32;

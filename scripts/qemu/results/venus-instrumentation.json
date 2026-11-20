@@ -1,0 +1,64 @@
+{
+  "generic": {
+    "modules": {
+      "dmabuf": {
+        "sha256": "c65504aed225abdd0bd188de432f05cab879aec789a2e50bc8eb0075dcb0c655",
+        "kasan": false,
+        "kmsan": false
+      },
+      "drm": {
+        "sha256": "e7f84561f1fb98f9b50c06cc3415dcf7ac3d5dd544abf31827107f3952c28432",
+        "kasan": false,
+        "kmsan": false
+      },
+      "virtio_gpu_drm": {
+        "sha256": "89e2b6853d9ff33d0c017b72fde943b081e70d5125cd18e5957a72e4376c6aea",
+        "kasan": false,
+        "kmsan": false
+      }
+    },
+    "build": "15.1-RELEASE-p7\n15.1-RELEASE-p7\nmode=generic\nSHA256 (dmabuf/dmabuf.ko) = c65504aed225abdd0bd188de432f05cab879aec789a2e50bc8eb0075dcb0c655\nSHA256 (drm/drm.ko) = e7f84561f1fb98f9b50c06cc3415dcf7ac3d5dd544abf31827107f3952c28432\nSHA256 (virtio/virtio_gpu_drm.ko) = 89e2b6853d9ff33d0c017b72fde943b081e70d5125cd18e5957a72e4376c6aea\n"
+  },
+  "kasan": {
+    "modules": {
+      "dmabuf": {
+        "sha256": "83a9b3dd589c3d69abc0908d0b5d45c287aadf444f5ee5c397a742ab2fcf5b92",
+        "kasan": true,
+        "kmsan": false
+      },
+      "drm": {
+        "sha256": "f9aacc8fb6f7c262a29f9870ea438698f6f17a25599b54be3f3b018f653c7654",
+        "kasan": true,
+        "kmsan": false
+      },
+      "virtio_gpu_drm": {
+        "sha256": "38dbb722a3fa36581d02e75362fcbb8e08d77d61915ffc02824960c737950381",
+        "kasan": true,
+        "kmsan": false
+      }
+    },
+    "build": "15.1-RELEASE-p7\n15.1-RELEASE-p7\nmode=kasan\nSHA256 (dmabuf/dmabuf.ko) = 83a9b3dd589c3d69abc0908d0b5d45c287aadf444f5ee5c397a742ab2fcf5b92\nSHA256 (drm/drm.ko) = f9aacc8fb6f7c262a29f9870ea438698f6f17a25599b54be3f3b018f653c7654\nSHA256 (virtio/virtio_gpu_drm.ko) = 38dbb722a3fa36581d02e75362fcbb8e08d77d61915ffc02824960c737950381\n"
+  },
+  "kmsan": {
+    "modules": {
+      "dmabuf": {
+        "sha256": "4072e6020db9e131409ff6ca33dd8726cdaa32176c77adb2c43737434afc72b1",
+        "kasan": false,
+        "kmsan": true
+      },
+      "drm": {
+        "sha256": "a3d7b04fc42d467ab21135d37cd85b9ebd8fddd9ad92de3ce7ce586e22271e5a",
+        "kasan": false,
+        "kmsan": true
+      },
+      "virtio_gpu_drm": {
+        "sha256": "03d4ca5b97462966e753f4a127a0ef32a9ee8e9827cea9882589cb1ce56298a1",
+        "kasan": false,
+        "kmsan": true
+      }
+    },
+    "build": "15.1-RELEASE-p7\n15.1-RELEASE-p7\nmode=kmsan\nSHA256 (dmabuf/dmabuf.ko) = 4072e6020db9e131409ff6ca33dd8726cdaa32176c77adb2c43737434afc72b1\nSHA256 (drm/drm.ko) = a3d7b04fc42d467ab21135d37cd85b9ebd8fddd9ad92de3ce7ce586e22271e5a\nSHA256 (virtio/virtio_gpu_drm.ko) = 03d4ca5b97462966e753f4a127a0ef32a9ee8e9827cea9882589cb1ce56298a1\n"
+  },
+  "venus_icd_archive_sha256": "115679a8c8a9e5461a3c57634b4bbadb025aa241f513137e59894d42a6a27bd2",
+  "venus_icd_library_sha256": "a976dd7504630129e0f1af6c6748fc3c11c152828101c1080127003c236ada0f"
+}

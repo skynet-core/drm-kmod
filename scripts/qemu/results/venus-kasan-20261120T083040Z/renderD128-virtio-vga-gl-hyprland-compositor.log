@@ -1,0 +1,76 @@
+Hyprland 0.56.2 built from branch v0.56.2 at commit efb50993780079460b0cbed1363e2166a2de1d9f clean ([gha] Nix: update inputs).
+Date: Wed Aug 5 14:13:21 2026
+Tag: v0.56.2, commits: 7661
+
+Libraries:
+Hyprgraphics: built against 0.5.1, system has unknown
+Hyprutils: built against 0.14.2, system has unknown
+Hyprcursor: built against 0.1.13, system has unknown
+Hyprlang: built against 0.6.8, system has unknown
+Aquamarine: built against 0.15.1, system has unknown
+
+Version ABI string: efb50993780079460b0cbed1363e2166a2de1d9f_aq_0.15_hu_0.14_hg_0.5_hc_0.1_hlg_0.6
+no flags were set
+
+
+System Information:
+System name: FreeBSD
+Node name: freebsd-test
+Release: 15.1-RELEASE-p7
+Version: FreeBSD 15.1-RELEASE-p7 VIRTGPU-KASAN
+
+Libraries:
+Hyprgraphics: built against 0.5.1, system has unknown
+Hyprutils: built against 0.14.2, system has unknown
+Hyprcursor: built against 0.1.13, system has unknown
+Hyprlang: built against 0.6.8, system has unknown
+Aquamarine: built against 0.15.1, system has unknown
+
+
+
+GPU information:
+
+
+os-release: NAME=FreeBSD
+VERSION="15.1-RELEASE-p7"
+VERSION_ID="15.1"
+ID=freebsd
+ANSI_COLOR="0;31"
+PRETTY_NAME="FreeBSD 15.1-RELEASE-p7"
+CPE_NAME="cpe:/o:freebsd:freebsd:15.1"
+HOME_URL="https://FreeBSD.org/"
+BUG_REPORT_URL="https://bugs.FreeBSD.org/"
+
+
+plugins:
+
+Explicit sync: missing
+GL ver: 3.2
+Backend: drm
+
+Monitor info:
+	Panel Virtual-1: 1440x900, Virtual-1 Red Hat, Inc. QEMU Monitor  -> backend drm
+		explicit ✔️
+		edid:
+			hdr ❌
+			chroma ✔️
+			bt2020 ❌
+		vrr capable ❌
+		non-desktop ❌
+
+
+State:
+
+configProvider: hyprlang
+backend: drm
+
+
+
+DEBUG from aquamarine ]: CDRMRenderer: Using KHR_context_flush_control
+DEBUG from aquamarine ]: Using: OpenGL ES 3.2 Mesa 26.2.2
+DEBUG from aquamarine ]: Vendor: Mesa
+DEBUG from aquamarine ]: Renderer: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+DEBUG from aquamarine ]: CDRMRenderer: Using KHR_context_flush_control
+DEBUG from aquamarine ]: Using: OpenGL ES 3.2 Mesa 26.2.2
+DEBUG from aquamarine ]: Vendor: Mesa
+DEBUG from aquamarine ]: Renderer: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)

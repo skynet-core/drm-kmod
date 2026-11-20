@@ -1,0 +1,62 @@
+[
+  {
+    "case": "renderD128-virtio-gpu-gl-hyprland",
+    "result": "pass",
+    "screenshot_sha256": "66c2dd928354643919dd1b118e02782597753ae3072cc24122cc3a3db2a8eddd"
+  },
+  {
+    "case": "renderD128-virtio-gpu-gl-plasma-wayland",
+    "result": "pass",
+    "screenshot_sha256": "628ebeec9f41a1c540614d75e0bae26e3f43ca66f888a00caaf532c1127c66b0"
+  },
+  {
+    "case": "renderD128-virtio-gpu-gl-plasma-x11",
+    "result": "pass",
+    "screenshot_sha256": "7ea20ae5630cbfffd868655f53a26e6462549664879b3de50863860d77b5b099"
+  },
+  {
+    "case": "renderD128-virtio-vga-gl-hyprland",
+    "result": "pass",
+    "screenshot_sha256": "cb72882f4afcc858dc5e8573509ffb887abfe331ebde95fda1f95785de2a2f1c"
+  },
+  {
+    "case": "renderD128-virtio-vga-gl-plasma-wayland",
+    "result": "pass",
+    "screenshot_sha256": "e6304e582547679c15b152a0b068f508823ca18065dabd6e4f5fb0b0ef87ebe2"
+  },
+  {
+    "case": "renderD128-virtio-vga-gl-plasma-x11",
+    "result": "pass",
+    "screenshot_sha256": "854e4d784eb89051e653a2b50674014eb28a7d7a19deb1216b55dfa30ec6c70b"
+  },
+  {
+    "case": "renderD129-virtio-gpu-gl-hyprland",
+    "result": "pass",
+    "screenshot_sha256": "0bcc4ef533cb0b6874b96543518634be1d39302063e2ab4394082ad94a26b654"
+  },
+  {
+    "case": "renderD129-virtio-gpu-gl-plasma-wayland",
+    "result": "pass",
+    "screenshot_sha256": "e72d961d839a54b429c0c7aba530d009d60bbdb4481d1addb8f5e52625171e16"
+  },
+  {
+    "case": "renderD129-virtio-gpu-gl-plasma-x11",
+    "result": "pass",
+    "screenshot_sha256": "d753fd6cd46b20bba99c0b2932052d719b02dbe7bba89d708c21da989f41342d"
+  },
+  {
+    "case": "renderD129-virtio-vga-gl-hyprland",
+    "result": "pass",
+    "screenshot_sha256": "6cb208ce0dc5a87a019ec021fc645d35bb1e64bb6e40c512fdf81a8cfce136bd"
+  },
+  {
+    "case": "renderD129-virtio-vga-gl-plasma-wayland",
+    "result": "pass",
+    "screenshot_sha256": "b9c8cd3d3f6f5547a6bc319d2e2a79139c836c723a319d39a70151500bc227d9"
+  },
+  {
+    "case": "renderD129-virtio-vga-gl-plasma-x11",
+    "result": "pass",
+    "screenshot_sha256": "746b608908c25a7556738ac5a0eb971573e574dd4103f4b87a4887a3ab217e9b"
+  }
+]

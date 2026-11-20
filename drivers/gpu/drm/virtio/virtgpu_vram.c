@@ -41,8 +41,10 @@ static int virtio_gpu_vram_mmap(struct drm_gem_object *obj,
 	if (!(bo->blob_flags & VIRTGPU_BLOB_FLAG_USE_MAPPABLE))
 		return -EINVAL;
 
-	wait_event(vgdev->resp_wq, vram->map_state != STATE_INITIALIZING);
-	if (vram->map_state != STATE_OK)
+	if (!wait_event_timeout(vgdev->resp_wq,
+	    READ_ONCE(vram->map_state) != STATE_INITIALIZING, 5 * HZ))
+		return -ETIMEDOUT;
+	if (READ_ONCE(vram->map_state) != STATE_OK)
 		return -EINVAL;
 
 	vma->vm_pgoff -= drm_vma_node_start(&obj->vma_node);
@@ -202,16 +204,12 @@ int virtio_gpu_vram_create(struct virtio_gpu_device *vgdev,
 
 	/* Create fake offset */
 	ret = drm_gem_create_mmap_offset(obj);
-	if (ret) {
-		kfree(vram);
-		return ret;
-	}
+	if (ret)
+		goto err_release;
 
 	ret = virtio_gpu_resource_id_get(vgdev, &vram->base.hw_res_handle);
-	if (ret) {
-		kfree(vram);
-		return ret;
-	}
+	if (ret)
+		goto err_release;
 
 	virtio_gpu_cmd_resource_create_blob(vgdev, &vram->base, params, NULL,
 					    0);
@@ -225,4 +223,9 @@ int virtio_gpu_vram_create(struct virtio_gpu_device *vgdev,
 
 	*bo_ptr = &vram->base;
 	return 0;
+
+err_release:
+	drm_gem_object_release(obj);
+	kfree(vram);
+	return ret;
 }

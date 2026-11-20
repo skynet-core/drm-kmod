@@ -1,0 +1,2 @@
+PASS kasan / /dev/dri/renderD128 / virtio-gpu-gl / hyprland
+PASS kasan / /dev/dri/renderD128 / virtio-gpu-gl / plasma-wayland

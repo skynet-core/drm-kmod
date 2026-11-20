@@ -1,0 +1,143 @@
+xauth:  file /home/freebsd/.serverauth.1973 does not exist
+
+
+X.Org X Server 1.21.1.26
+X Protocol Version 11, Revision 0
+Current Operating System: FreeBSD freebsd-test 15.1-RELEASE-p7 FreeBSD 15.1-RELEASE-p7 VIRTGPU-KMSAN amd64
+
+Current version of pixman: 0.46.4
+	Before reporting problems, check http://wiki.x.org
+	to make sure that you have the latest version.
+Markers: (--) probed, (**) from config file, (==) default setting,
+	(++) from command line, (!!) notice, (II) informational,
+	(WW) warning, (EE) error, (NI) not implemented, (??) unknown.
+(==) Log file: "/var/log/Xorg.1.log", Time: Fri Nov 20 08:24:24 2026
+(==) Using system config directory "/usr/local/share/X11/xorg.conf.d"
+The XKEYBOARD keymap compiler (xkbcomp) reports:
+> Warning:          Multiple symbols for level 1/group 1 on key <FK23>
+>                   Using F23, ignoring XF86TouchpadOff
+> Warning:          Symbol map for key <FK23> redefined
+>                   Using last definition for conflicting fields
+> Warning:          Symbol map for key <FK24> redefined
+>                   Using last definition for conflicting fields
+> Warning:          Could not resolve keysym XF86ElectronicPrivacyScreenOn
+> Warning:          Could not resolve keysym XF86ElectronicPrivacyScreenOff
+> Warning:          Could not resolve keysym XF86ActionOnSelection
+> Warning:          Could not resolve keysym XF86ContextualInsert
+> Warning:          Could not resolve keysym XF86ContextualQuery
+Errors from xkbcomp are not fatal to the X server
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.kde.KSplash' requested by ':1.0' (uid=1001 pid=2065 comm="")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.kde.KSplash'
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.4' (uid=1001 pid=2075 comm="")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.5' (uid=1001 pid=2077 comm="")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.freedesktop.portal.Documents' requested by ':1.5' (uid=1001 pid=2077 comm="")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.freedesktop.portal.Documents'
+fuse: unknown option(s): `-o auto_unmount'
+error: fuse init failed: Can't create fuse session
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:40.861: Document portal fuse mount point unknown: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name :1.7 was not provided by any .service files
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.freedesktop.impl.portal.desktop.kde' requested by ':1.5' (uid=1001 pid=2077 comm="")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.freedesktop.impl.portal.desktop.kde'
+Failed to create wl_display (Connection refused)
+xdp-kde-clipboard: Couldn't resolve QWaylandApplication - clipboard will not work
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.079: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.079: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.079: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+org.kde.plasma.session: process job  "kcminit_startup" finished with exit code  0
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.094: Failed to connect to PipeWire: Couldn't connect to PipeWire
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.freedesktop.impl.portal.desktop.kwallet' requested by ':1.5' (uid=1001 pid=2077 comm="")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.freedesktop.portal.Desktop'
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.120: Failed to get pidfd for host process 2084: Unable to pidfd from pid 2084: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.125: Failed to get pidfd for host process 2084: Unable to pidfd from pid 2084: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.126: Failed to get pidfd for host process 2075: Unable to pidfd from pid 2075: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.126: Failed to get pidfd for host process 2075: Unable to pidfd from pid 2075: Inappropriate ioctl for device
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.126: Failed to get pidfd for host process 2075: Unable to pidfd from pid 2075: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kcminit'")
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.126: Failed to get pidfd for host process 2075: Unable to pidfd from pid 2075: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kcminit'")
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: Connection already associated with an application ID")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.freedesktop.impl.portal.desktop.kwallet'
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.372: Failed to get pidfd for host process 2089: Unable to pidfd from pid 2089: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.372: Failed to get pidfd for host process 2089: Unable to pidfd from pid 2089: Inappropriate ioctl for device
+Couldn't start kglobalaccel from org.kde.kglobalaccel.service: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name org.kde.kglobalaccel was not provided by any .service files")
+org.kde.kcm_keyboard: Can't find setxkbmap - keyboard layouts won't be configured
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.549: Failed to get pidfd for host process 2087: Unable to pidfd from pid 2087: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.550: Failed to get pidfd for host process 2087: Unable to pidfd from pid 2087: Inappropriate ioctl for device
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.815: Failed to get pidfd for host process 2090: Unable to pidfd from pid 2090: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:41.816: Failed to get pidfd for host process 2090: Unable to pidfd from pid 2090: Inappropriate ioctl for device
+Couldn't start kglobalaccel from org.kde.kglobalaccel.service: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name org.kde.kglobalaccel was not provided by any .service files")
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kwin'")
+Couldn't start kglobalaccel from org.kde.kglobalaccel.service: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name org.kde.kglobalaccel was not provided by any .service files")
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.167: Failed to get pidfd for host process 2092: Unable to pidfd from pid 2092: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.167: Failed to get pidfd for host process 2092: Unable to pidfd from pid 2092: No such file or directory
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.ksmserver'")
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.256: Failed to get pidfd for host process 2095: Unable to pidfd from pid 2095: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.257: Failed to get pidfd for host process 2095: Unable to pidfd from pid 2095: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.xembedsniproxy'")
+W: [] caps.c: Normally all extra capabilities would be dropped now, but that's impossible because PulseAudio was built without capabilities support.
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.367: Failed to get pidfd for host process 2097: Unable to pidfd from pid 2097: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.367: Failed to get pidfd for host process 2097: Unable to pidfd from pid 2097: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.gmenudbusmenuproxy'")
+dbus-daemon[2064]: [session uid=1001 pid=2064] Activating service name='org.kde.ActivityManager' requested by ':1.19' (uid=1001 pid=2093 comm="")
+Couldn't start kglobalaccel from org.kde.kglobalaccel.service: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name org.kde.kglobalaccel was not provided by any .service files")
+Couldn't start kglobalaccel from org.kde.kglobalaccel.service: QDBusError("org.freedesktop.DBus.Error.ServiceUnknown", "The name org.kde.kglobalaccel was not provided by any .service files")
+X server XKB extension major= 1  minor= 0
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.417: Failed to get pidfd for host process 2094: Unable to pidfd from pid 2094: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.418: Failed to get pidfd for host process 2094: Unable to pidfd from pid 2094: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.460: Failed to get pidfd for host process 2104: Unable to pidfd from pid 2104: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.460: Failed to get pidfd for host process 2104: Unable to pidfd from pid 2104: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.kglobalaccel'")
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.484: Failed to get pidfd for host process 2093: Unable to pidfd from pid 2093: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.484: Failed to get pidfd for host process 2093: Unable to pidfd from pid 2093: Inappropriate ioctl for device
+dbus-daemon[2064]: [session uid=1001 pid=2064] Successfully activated service 'org.kde.ActivityManager'
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.551: Failed to get pidfd for host process 2113: Unable to pidfd from pid 2113: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.552: Failed to get pidfd for host process 2113: Unable to pidfd from pid 2113: Inappropriate ioctl for device
+qt.qpa.services: Failed to register with host portal QDBusError("org.freedesktop.portal.Error.Failed", "Could not register app ID: App info not found for 'org.kde.ActivityManager'")
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.759: Failed to get pidfd for host process 2105: Unable to pidfd from pid 2105: No such file or directory
+
+(/usr/local/libexec/xdg-desktop-portal:2077): xdg-desktop-portal-WARNING **: 08:24:42.760: Failed to get pidfd for host process 2105: Unable to pidfd from pid 2105: Inappropriate ioctl for device
+qt.qml.propertyCache.append: Member visible of the object PlasmaQuick::Dialog overrides a member of the base object. Consider renaming it or adding final or override specifier
+qt.qml.propertyCache.append: Member enabled of the object DeclarativeDropArea overrides a member of the base object. Consider renaming it or adding final or override specifier
+qt.qml.propertyCache.append: Final member StackingOrder is overridden in class QQmlDMAbstractItemModelData. The override won't be used.
+qrc:/qt/qml/plasma/applet/org/kde/plasma/notifications/global/PulseAudio.qml:9:1: module "org.kde.plasma.private.volume" is not installed
+Connecting to deprecated signal QDBusConnectionInterface::serviceOwnerChanged(QString,QString,QString)
+Configured: ttyu0,gdb
+ Available: ttyu0,ttyv0,gdb
+    Muting: off
+Configured: ttyv0,ttyu0,gdb
+ Available: ttyu0,ttyv0,gdb
+    Muting: off

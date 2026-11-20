@@ -20,6 +20,7 @@
 #include <linux/pci.h>
 #include <linux/virtio.h>
 #include <linux/virtio_config.h>
+#include <uapi/linux/virtio_gpu.h>
 
 #include "freebsd/virtgpu_freebsd.h"
 
@@ -201,6 +202,14 @@ static const struct virtio_config_ops lkpi_virtio_config_ops = {
 	.del_vqs = lkpi_virtio_del_vqs,
 };
 
+bool
+virtio_get_shm_region(struct virtio_device *vdev,
+    struct virtio_shm_region *region, u8 id)
+{
+	return (id == VIRTIO_GPU_SHM_ID_HOST_VISIBLE &&
+	    fbsd_gpu_hostmem(vdev->bsddev, &region->addr, &region->len));
+}
+
 void *
 lkpi_virtio_vdev_create(device_t dev, device_t pcidev, uint64_t features)
 {
@@ -217,6 +226,8 @@ lkpi_virtio_vdev_create(device_t dev, device_t pcidev, uint64_t features)
 		kfree(vdev);
 		return (NULL);
 	}
+	/* lkpinew_pci_dev() fills only the native base class. */
+	pdev->class = pci_read_config(pcidev, PCIR_REVID, 4) >> 8;
 	vdev->dev.parent = &pdev->dev;
 	vdev->bsddev = dev;
 	vdev->features = features;

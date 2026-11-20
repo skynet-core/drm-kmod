@@ -1,20 +1,26 @@
-# virtio-gpu DRM driver for FreeBSD (2D / KMS)
+# virtio-gpu DRM driver for FreeBSD
 
 A port of Linux's `drivers/gpu/drm/virtio/` paravirtual display driver
 into the drm-kmod framework, for FreeBSD 15.1 guests under QEMU/UTM
-with a `virtio-gpu-pci` device.  Developed and tested on aarch64
-(Apple-silicon UTM, QEMU/hvf); the code is arch-neutral.
+with a virtio GPU device. Developed on aarch64 (Apple-silicon UTM,
+QEMU/hvf), and tested on amd64 QEMU/KVM with Radeon and NVIDIA renderers.
 
-**Scope: 2D KMS, plus classic virgl 3D when the host offers it.**
-KMS atomic modesetting, dumb buffers, fbdev console, PRIME
-self-import, and - with a virtio-gpu-gl host device - GPU-accelerated
-GLES via Mesa virgl (see the virgl section).  Out of scope: blob
-resources, host-visible memory, venus/Vulkan, multi-head.
+The driver supports atomic KMS, dumb buffers, the framebuffer console,
+and PRIME self-import. QEMU GL devices can expose OpenGL/GLES through
+virgl and Vulkan through Venus. Venus uses resource blobs, a host-visible
+PCI memory window and context initialization. Multi-head is out of scope.
 
 Upstream base: Linux v6.12 driver sources against drm-kmod
 `drm_v6.12.85_2` (DRM core 6.12.85).  The upstream `virtgpu_*.c` files
 carry minimal, commented diffs; all FreeBSD-specific code lives in
 separate files (see Architecture).
+
+For reproducible amd64 development VMs, explicit Radeon/NVIDIA host render
+node selection, `virtio-gpu-gl-pci` / `virtio-vga-gl` runs, sanitizer builds
+and desktop capture helpers, see [scripts/qemu](../../../../scripts/qemu/README.md).
+The [amd64 test report](../../../../scripts/qemu/results/README.md) includes
+KASAN/KMSAN logs and real Hyprland and Plasma Wayland/X11 screenshots for
+both host renderers and both GL device models.
 
 ## Build
 
@@ -122,16 +128,16 @@ plain virtio-gpu-pci, so the resolution is chosen guest-side.  Also
 raise the default fonts, which read tiny at this density: foot.ini
 `font=monospace:size=12` and sway `font pango:DejaVu Sans 11`.)
 
-## 3D acceleration (classic virgl, experimental)
+## 3D acceleration
 
 If the host display device offers `VIRTIO_GPU_F_VIRGL`, the driver
-negotiates it and the full 3D path unlocks: Mesa's virgl driver
+negotiates it. Mesa's virgl driver
 (`virtio_gpu_dri.so`, in `graphics/mesa-dri`) renders through the
 host GPU, and sway runs on its default GLES2 renderer with no
 environment overrides.
 
 Host side: UTM — enable the GPU-accelerated display device
-(`virtio-gpu-gl-pci`); plain QEMU — `-device virtio-gpu-gl-pci` (or
+(`virtio-gpu-gl-pci`); plain QEMU — `-vga none -device virtio-gpu-gl-pci` (or
 `-vga none -device virtio-vga-gl`) with virglrenderer support built
 in.  On a host without virgl the feature simply does not negotiate
 and the driver behaves exactly as the 2D configuration.
@@ -142,9 +148,12 @@ at several hundred fps, and the 2D paths (console, kmstest, dumb
 buffers) are unaffected with 3D active.  Note the GL device model
 shows up with a larger control ring (256 vs 64 slots).
 
-Still out of scope: blob resources (`VIRTGPU_BLOB`), host-visible
-memory, venus/Vulkan — the corresponding features are rejected at
-negotiation.
+For Vulkan, enable QEMU's Venus and blob properties and allocate a
+host memory window. The FreeBSD shim only negotiates blob support after
+reserving a valid shared-memory BAR. Install the native Mesa Venus ICD
+in the guest and select the Vulkan ICD corresponding to the host render
+node. The [QEMU helpers](../../../../scripts/qemu/README.md#hardware-vulkan-with-venus)
+build the guest ICD and configure these settings on Linux hosts.
 
 ## Architecture
 

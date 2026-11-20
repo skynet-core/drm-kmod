@@ -1,0 +1,46 @@
+{
+  "archive_bytes": 422012522,
+  "expected_sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+  "kernel": "VIRTGPU-KMSAN",
+  "host_renderer": "NVIDIA RTX 3090 /dev/dri/renderD129",
+  "device": "virtio-vga-gl",
+  "session": "Plasma X11 with glmark2 --run-forever",
+  "transfers": [
+    {
+      "iteration": 1,
+      "sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+      "seconds": 6.04,
+      "pass": true
+    },
+    {
+      "iteration": 2,
+      "sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+      "seconds": 6.29,
+      "pass": true
+    },
+    {
+      "iteration": 3,
+      "sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+      "seconds": 6.22,
+      "pass": true
+    },
+    {
+      "iteration": 4,
+      "sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+      "seconds": 11.17,
+      "pass": true
+    },
+    {
+      "iteration": 5,
+      "sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+      "seconds": 6.14,
+      "pass": true
+    },
+    {
+      "iteration": 6,
+      "sha256": "d2c576579c7543ffdc5379154d76e403bda43dcf4ff388ff6e0c8db4c5fd7db3",
+      "seconds": 6.13,
+      "pass": true
+    }
+  ]
+}
