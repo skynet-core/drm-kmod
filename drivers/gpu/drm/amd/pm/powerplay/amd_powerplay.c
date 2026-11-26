@@ -80,11 +80,10 @@ static void amd_powerplay_destroy(struct amdgpu_device *adev)
 	hwmgr = NULL;
 }
 
-static int pp_early_init(void *handle)
+static int pp_early_init(struct amdgpu_ip_block *ip_block)
 {
 	int ret;
-	struct amdgpu_device *adev = handle;
-
+	struct amdgpu_device *adev = ip_block->adev;
 	ret = amd_powerplay_create(adev);
 
 	if (ret != 0)
@@ -651,8 +650,11 @@ static int pp_dpm_get_pp_table(void *handle, char **table)
 {
 	struct pp_hwmgr *hwmgr = handle;
 
-	if (!hwmgr || !hwmgr->pm_en || !hwmgr->soft_pp_table)
+	if (!hwmgr || !hwmgr->pm_en || !table)
 		return -EINVAL;
+
+	if (!hwmgr->soft_pp_table)
+		return -EOPNOTSUPP;
 
 	*table = (char *)hwmgr->soft_pp_table;
 	return hwmgr->soft_pp_table_size;

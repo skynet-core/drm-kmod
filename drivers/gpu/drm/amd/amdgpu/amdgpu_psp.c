@@ -163,9 +163,9 @@ static int psp_init_sriov_microcode(struct psp_context *psp)
 	return ret;
 }
 
-static int psp_early_init(void *handle)
+static int psp_early_init(struct amdgpu_ip_block *ip_block)
 {
-	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
+	struct amdgpu_device *adev = ip_block->adev;
 	struct psp_context *psp = &adev->psp;
 
 	psp->autoload_supported = true;
@@ -361,6 +361,12 @@ static bool psp_get_runtime_db_entry(struct amdgpu_device *adev,
 	struct psp_runtime_data_directory db_dir = {0};
 	bool ret = false;
 	int i;
+
+	/*
+	 * Runtime DB is for dGPUs only.
+	 */
+	if (adev->flags & AMD_IS_APU)
+		return false;
 
 	if (amdgpu_ip_version(adev, MP0_HWIP, 0) == IP_VERSION(13, 0, 6) ||
 	    amdgpu_ip_version(adev, MP0_HWIP, 0) == IP_VERSION(13, 0, 14))
