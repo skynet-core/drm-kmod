@@ -1,0 +1,15 @@
+>>> Kernel build for RELENG152 completed on Thu Nov 26 22:11:05 UTC 2026
+--------------------------------------------------------------
+>>> Kernel(s)  RELENG152 built in 121 seconds, ncpu: 14, make -j14
+--------------------------------------------------------------
+--------------------------------------------------------------
+>>> Install kernel(s) RELENG152 completed in 5 seconds, ncpu: 14
+--------------------------------------------------------------
+SHA256 (dmabuf/dmabuf.ko) = aaed61b6b599342bd2915092fb17bfc7493501189545f91d9d6321df134a90a1
+SHA256 (drm/drm.ko) = 2ea8a2459dd3f73c29c0f781de759f930f4075ca4fdcabaa4fa3c78468b19d00
+SHA256 (virtio/virtio_gpu_drm.ko) = 9da689b60d88d5c1e6e12fa4061e6197a7df67b52f00ae90494518117190f29e
+SHA256 (ttm/ttm.ko) = 1a73d85fa5d4d7b66f478ec48e2882767d1361fc451b1cda3eed106ad1a60781
+SHA256 (amd/amdgpu/amdgpu.ko) = 6b4ca92b29d4b2dfe0a082da34de0d1e1658d60294abf38e0eec3c51f58dba9e
+SHA256 (radeon/radeonkms.ko) = 1782fd481fee5df016acc5476bfefdd1329559990573d1ea3717920e7c55897f
+SHA256 (i915/i915kms.ko) = 1ee6cb5d10e6552d5984eae4dbee46d2b88ced11165761a196af3e7f75c07cb4
+SHA256 (/boot/kernel.releng152/kernel) = fedae0463ede4bc6a25ddfe04843f4d13f6af6d954ddd9862587960744786c5d

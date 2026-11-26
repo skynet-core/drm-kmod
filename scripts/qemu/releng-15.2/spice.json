@@ -1,0 +1,96 @@
+{
+  "resizes": [
+    {
+      "requested": [
+        1920,
+        1200
+      ],
+      "active": [
+        1920,
+        1200
+      ],
+      "scale": 2
+    },
+    {
+      "requested": [
+        3840,
+        2160
+      ],
+      "active": [
+        3840,
+        2160
+      ],
+      "scale": 2
+    },
+    {
+      "requested": [
+        2960,
+        1662
+      ],
+      "active": [
+        2960,
+        1662
+      ],
+      "scale": 2
+    }
+  ],
+  "tablet": [
+    {
+      "sent": [
+        320,
+        240
+      ],
+      "guest": [
+        159,
+        119
+      ]
+    },
+    {
+      "sent": [
+        1400,
+        800
+      ],
+      "guest": [
+        699,
+        399
+      ]
+    },
+    {
+      "sent": [
+        400,
+        320
+      ],
+      "guest": [
+        199,
+        159
+      ]
+    },
+    {
+      "sent": [
+        320,
+        240
+      ],
+      "guest": [
+        159,
+        119
+      ]
+    }
+  ],
+  "frame_timing": [
+    {
+      "pointer": "still",
+      "app_fps": 1167,
+      "app_ms": 0.857,
+      "display_invalidations": 24711,
+      "sent_tablet_events": 0
+    },
+    {
+      "pointer": "moving",
+      "app_fps": 1176,
+      "app_ms": 0.851,
+      "display_invalidations": 18525,
+      "sent_tablet_events": 431
+    }
+  ],
+  "display_updates_entire_session": 64218
+}

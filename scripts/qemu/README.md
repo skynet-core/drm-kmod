@@ -9,8 +9,10 @@ under the ignored `.qemu/` directory. Set `QEMU_STATE` to move this directory.
 For a developer's introduction to rendering, display control, and how a draw
 travels from FreeBSD to the host GPU, see [How graphics works in a FreeBSD 15.1 QEMU guest](graphics-stack.md).
 
-See the [recorded test results and screenshots](results/README.md) for the
-Radeon/NVIDIA KASAN and KMSAN desktop matrix.
+The earlier Radeon/NVIDIA KASAN and KMSAN desktop matrix includes guest
+logs and screenshots. [FreeBSD 15.1 test results](https://github.com/skynet-core/drm-kmod/blob/f97ff2d96d078d43c6df03286f2a48524d5bf5e7/scripts/qemu/results/README.md)
+The [FreeBSD 15.2 qualification](releng-15.2/README.md) records the release
+kernel and DRM source revisions and compares hardware rendering with `stable/15`.
 
 For an existing libvirt VM, follow the [virt-manager setup](#libvirt-and-virt-manager-setup-for-sddm-and-hyprland)
 to configure accelerated graphics and absolute pointer tracking.
@@ -440,6 +442,18 @@ the pointer still, then again while moving it. With EGL headless on the RTX
 3090, glmark2 reported 0.391–0.396 ms per frame while still and
 0.395–0.396 ms during motion. These are application frame times. To check
 what reaches the screen, record the viewer during the same two runs.
+
+Small cursor movements can damage only a small region of the desktop.
+The virtio driver uses that region for accelerated framebuffers and still
+presents a newly selected framebuffer when its damage falls outside the
+visible area. Switching to a different CPU-backed dumb buffer triggers a
+full update because each buffer has its own uploaded contents.
+
+The fresh 15.2-BETA3 guest also applied SPICE requests for 1920 × 1200,
+3840 × 2160, and 2960 × 1662 at scale 2. Returning to the same tablet
+position produced the same guest coordinates. The test recorded each
+SPICE display update and tablet position during the benchmark.
+[15.2 resize, pointer, and frame timing results](releng-15.2/README.md#spice-resolution-and-pointer-motion)
 
 ## Build and deploy
 

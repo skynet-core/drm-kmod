@@ -1,0 +1,16 @@
+>>> Kernel build for STABLE15 completed on Thu Nov 26 22:04:24 UTC 2026
+--------------------------------------------------------------
+>>> Kernel(s)  STABLE15 built in 294 seconds, ncpu: 14, make -j14
+--------------------------------------------------------------
+--------------------------------------------------------------
+>>> Install kernel(s) STABLE15 completed in 25 seconds, ncpu: 14
+--------------------------------------------------------------
+Unmodified virtio-gpu-nvidia compile diagnostics on stable/15
+/root/drm-kmod/drivers/gpu/drm/virtio/freebsd/linux/dma-mapping.h:16:1: error: redefinition of 'dma_sync_sgtable_for_device'
+/usr/src/sys/compat/linuxkpi/common/include/linux/string.h:76:1: error: conflicting types for 'memdup_user'
+Control with the LinuxKPI compatibility commit applied
+kern.bootfile: /boot/kernel.stable15/kernel
+SHA256 (/boot/kernel.stable15/kernel) = 52388d0884653c50999e52bbe265e933349f5241a0c45be72b1439b5ad19c5e7
+SHA256 (/boot/modules/dmabuf.ko) = 85849eeb1661487abb9e6f877e047a5c0fd73e07a3818bfe0e27879495d16a47
+SHA256 (/boot/modules/drm.ko) = 13630413891f5a4708c6baad0f27c7221a34b7c0415efa205bc2c46fcad05879
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = c98fe40e066c9819f1529008e2136fe9ebd6e1c9913c69dadfea0fe141627bbe

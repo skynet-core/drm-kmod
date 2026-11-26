@@ -1,0 +1,231 @@
+[stable/15 / host renderD129 / virtio-vga-gl]
+FreeBSD 15.2-STABLE STABLE15
+kern.ident: STABLE15
+kern.osreldate: 1502501
+kern.bootfile: /boot/kernel.stable15/kernel
+2    1 0xffffffff82308000    1e5f8 virtio_gpu_drm.ko
+3    3 0xffffffff82327000     e818 dmabuf.ko
+4    2 0xffffffff82336000   125a28 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = c98fe40e066c9819f1529008e2136fe9ebd6e1c9913c69dadfea0fe141627bbe
+SHA256 (/boot/modules/drm.ko) = 13630413891f5a4708c6baad0f27c7221a34b7c0415efa205bc2c46fcad05879
+SHA256 (/boot/modules/dmabuf.ko) = 85849eeb1661487abb9e6f877e047a5c0fd73e07a3818bfe0e27879495d16a47
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.2 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION:     4.2 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 1222 FrameTime: 0.818 ms
+glmark2 Score: 1221
+
+[releng/15.2 / host renderD129 / virtio-vga-gl]
+FreeBSD 15.2-BETA3 RELENG152
+kern.ident: RELENG152
+kern.osreldate: 1502000
+kern.bootfile: /boot/kernel.releng152/kernel
+3    1 0xffffffff82958000    1e5f8 virtio_gpu_drm.ko
+4    3 0xffffffff82977000     e818 dmabuf.ko
+5    2 0xffffffff82986000   125c50 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = 9da689b60d88d5c1e6e12fa4061e6197a7df67b52f00ae90494518117190f29e
+SHA256 (/boot/modules/drm.ko) = 2ea8a2459dd3f73c29c0f781de759f930f4075ca4fdcabaa4fa3c78468b19d00
+SHA256 (/boot/modules/dmabuf.ko) = aaed61b6b599342bd2915092fb17bfc7493501189545f91d9d6321df134a90a1
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.2 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION:     4.2 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 1340 FrameTime: 0.747 ms
+glmark2 Score: 1339
+
+[stable/15 / host renderD129 / virtio-gpu-gl-pci]
+FreeBSD 15.2-STABLE STABLE15
+kern.ident: STABLE15
+kern.osreldate: 1502501
+kern.bootfile: /boot/kernel.stable15/kernel
+2    1 0xffffffff82308000    1e5f8 virtio_gpu_drm.ko
+3    3 0xffffffff82327000     e818 dmabuf.ko
+4    2 0xffffffff82336000   125a28 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = c98fe40e066c9819f1529008e2136fe9ebd6e1c9913c69dadfea0fe141627bbe
+SHA256 (/boot/modules/drm.ko) = 13630413891f5a4708c6baad0f27c7221a34b7c0415efa205bc2c46fcad05879
+SHA256 (/boot/modules/dmabuf.ko) = 85849eeb1661487abb9e6f877e047a5c0fd73e07a3818bfe0e27879495d16a47
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.2 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION:     4.2 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 1281 FrameTime: 0.781 ms
+glmark2 Score: 1280
+
+[releng/15.2 / host renderD129 / virtio-gpu-gl-pci]
+FreeBSD 15.2-BETA3 RELENG152
+kern.ident: RELENG152
+kern.osreldate: 1502000
+kern.bootfile: /boot/kernel.releng152/kernel
+3    1 0xffffffff82956000    1e5f8 virtio_gpu_drm.ko
+4    3 0xffffffff82975000     e818 dmabuf.ko
+5    2 0xffffffff82984000   125c50 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = 9da689b60d88d5c1e6e12fa4061e6197a7df67b52f00ae90494518117190f29e
+SHA256 (/boot/modules/drm.ko) = 2ea8a2459dd3f73c29c0f781de759f930f4075ca4fdcabaa4fa3c78468b19d00
+SHA256 (/boot/modules/dmabuf.ko) = aaed61b6b599342bd2915092fb17bfc7493501189545f91d9d6321df134a90a1
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.2 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (NVIDIA GeForce RTX 3090/PCIe/SSE2)
+GL_VERSION:     4.2 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 1519 FrameTime: 0.658 ms
+glmark2 Score: 1518
+
+[stable/15 / host renderD128 / virtio-vga-gl]
+FreeBSD 15.2-STABLE STABLE15
+kern.ident: STABLE15
+kern.osreldate: 1502501
+kern.bootfile: /boot/kernel.stable15/kernel
+2    1 0xffffffff8230a000    1e5f8 virtio_gpu_drm.ko
+3    3 0xffffffff82329000     e818 dmabuf.ko
+4    2 0xffffffff82338000   125a28 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = c98fe40e066c9819f1529008e2136fe9ebd6e1c9913c69dadfea0fe141627bbe
+SHA256 (/boot/modules/drm.ko) = 13630413891f5a4708c6baad0f27c7221a34b7c0415efa205bc2c46fcad05879
+SHA256 (/boot/modules/dmabuf.ko) = 85849eeb1661487abb9e6f877e047a5c0fd73e07a3818bfe0e27879495d16a47
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.3 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION:     4.3 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 773 FrameTime: 1.294 ms
+glmark2 Score: 772
+
+[releng/15.2 / host renderD128 / virtio-vga-gl]
+FreeBSD 15.2-BETA3 RELENG152
+kern.ident: RELENG152
+kern.osreldate: 1502000
+kern.bootfile: /boot/kernel.releng152/kernel
+3    1 0xffffffff82958000    1e5f8 virtio_gpu_drm.ko
+4    3 0xffffffff82977000     e818 dmabuf.ko
+5    2 0xffffffff82986000   125c50 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = 9da689b60d88d5c1e6e12fa4061e6197a7df67b52f00ae90494518117190f29e
+SHA256 (/boot/modules/drm.ko) = 2ea8a2459dd3f73c29c0f781de759f930f4075ca4fdcabaa4fa3c78468b19d00
+SHA256 (/boot/modules/dmabuf.ko) = aaed61b6b599342bd2915092fb17bfc7493501189545f91d9d6321df134a90a1
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.3 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION:     4.3 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 802 FrameTime: 1.248 ms
+glmark2 Score: 801
+
+[stable/15 / host renderD128 / virtio-gpu-gl-pci]
+FreeBSD 15.2-STABLE STABLE15
+kern.ident: STABLE15
+kern.osreldate: 1502501
+kern.bootfile: /boot/kernel.stable15/kernel
+2    1 0xffffffff82309000    1e5f8 virtio_gpu_drm.ko
+3    3 0xffffffff82328000     e818 dmabuf.ko
+4    2 0xffffffff82337000   125a28 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = c98fe40e066c9819f1529008e2136fe9ebd6e1c9913c69dadfea0fe141627bbe
+SHA256 (/boot/modules/drm.ko) = 13630413891f5a4708c6baad0f27c7221a34b7c0415efa205bc2c46fcad05879
+SHA256 (/boot/modules/dmabuf.ko) = 85849eeb1661487abb9e6f877e047a5c0fd73e07a3818bfe0e27879495d16a47
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.3 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION:     4.3 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 777 FrameTime: 1.287 ms
+glmark2 Score: 776
+
+[releng/15.2 / host renderD128 / virtio-gpu-gl-pci]
+FreeBSD 15.2-BETA3 RELENG152
+kern.ident: RELENG152
+kern.osreldate: 1502000
+kern.bootfile: /boot/kernel.releng152/kernel
+3    1 0xffffffff82958000    1e5f8 virtio_gpu_drm.ko
+4    3 0xffffffff82977000     e818 dmabuf.ko
+5    2 0xffffffff82986000   125c50 drm.ko
+mesa-dri 26.2.2_1
+hyprland 0.57.2
+glmark2 2023.01_2
+SHA256 (/boot/modules/virtio_gpu_drm.ko) = 9da689b60d88d5c1e6e12fa4061e6197a7df67b52f00ae90494518117190f29e
+SHA256 (/boot/modules/drm.ko) = 2ea8a2459dd3f73c29c0f781de759f930f4075ca4fdcabaa4fa3c78468b19d00
+SHA256 (/boot/modules/dmabuf.ko) = aaed61b6b599342bd2915092fb17bfc7493501189545f91d9d6321df134a90a1
+virtio_gpu_drm0: negotiated features 0x0000000110000013 EDID VIRGL INDIRECT
+1440x900@74.99500 at 0x0
+hardwareCursorsInUse: true
+backend: drm
+GL_RENDERER: virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION: OpenGL ES 3.2 Mesa 26.2.2
+PASS: 1000 alternating GPU frames with full pixel readback
+direct rendering: Yes
+Accelerated: yes
+OpenGL core profile version string: 4.3 (Core Profile) Mesa 26.2.2
+GL_RENDERER:    virgl (AMD Ryzen 9 9950X3D 16-Core Processor (radeonsi, rap...)
+GL_VERSION:     4.3 (Compatibility Profile) Mesa 26.2.2
+[build] duration=3:use-vbo=true: FPS: 820 FrameTime: 1.220 ms
+glmark2 Score: 819
