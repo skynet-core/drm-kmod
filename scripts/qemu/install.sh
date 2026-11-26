@@ -8,12 +8,17 @@ for tool in curl xz qemu-img ssh-keygen python3 xorriso; do
 done
 umask 077
 mkdir -p "$QEMU_STATE/cache"
-IMAGE=FreeBSD-15.1-RELEASE-amd64-BASIC-CLOUDINIT-ufs.qcow2
-IMAGE_SHA256=e4ca4db889f8559c9b9dfcacc70405c038476f4b6d41649b152d3809a2ed9e1f
+release=${QEMU_FREEBSD_RELEASE:-15.1-RELEASE}
+case "$release" in
+    15.1-RELEASE) IMAGE_SHA256=e4ca4db889f8559c9b9dfcacc70405c038476f4b6d41649b152d3809a2ed9e1f ;;
+    15.2-BETA3) IMAGE_SHA256=58ce7d45cc99969240f004c2b9529a76ad9418d5ded138e4a5a5f2bf3d41be8e ;;
+    *) die "Unsupported FreeBSD image: $release" ;;
+esac
+IMAGE=FreeBSD-$release-amd64-BASIC-CLOUDINIT-ufs.qcow2
 BASE=$QEMU_STATE/cache/$IMAGE
 if [[ ! -f $BASE ]]; then
     curl -fL --retry 3 --continue-at - -o "$BASE.xz" \
-        "https://download.freebsd.org/releases/VM-IMAGES/15.1-RELEASE/amd64/Latest/$IMAGE.xz"
+        "https://download.freebsd.org/releases/VM-IMAGES/$release/amd64/Latest/$IMAGE.xz"
     python3 - "$BASE.xz" "$IMAGE_SHA256" <<'PY'
 import hashlib, sys
 with open(sys.argv[1], 'rb') as f:

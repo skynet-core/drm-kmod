@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # Executed once as root by FreeBSD nuageinit. The public key is appended by install.sh.
 set -eu
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 exec > /var/log/drm-qemu-init.log 2>&1
 if ! pw usershow freebsd >/dev/null 2>&1; then
     pw useradd freebsd -m -s /bin/sh

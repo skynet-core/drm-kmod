@@ -1,7 +1,7 @@
 # FreeBSD virtio GPU development guests
 
 These helpers create `freebsd-build` and `freebsd-test` from the official
-FreeBSD 15.1 amd64 BASIC-CLOUDINIT image. The compressed image is SHA256
+FreeBSD 15.1 amd64 BASIC-CLOUDINIT image by default. The compressed image is SHA256
 verified, shared read-only, and backed by separate 100 GB qcow2 overlays.
 Disks, firmware variables, SSH identities, build artifacts and logs live
 under the ignored `.qemu/` directory. Set `QEMU_STATE` to move this directory.
@@ -32,6 +32,15 @@ scripts/qemu/install.sh
 scripts/qemu/run.sh freebsd-build
 RENDER_NODE=/dev/dri/renderD128 GPU_DEVICE=virtio-gpu-gl-pci \
     scripts/qemu/run.sh freebsd-test
+```
+
+To create fresh 15.2-BETA3 guests in a separate state directory, export
+these values before running the same helpers. Existing disks are reused
+within each state directory.
+
+```sh
+export QEMU_STATE="$PWD/.qemu/releng-15.2" QEMU_FREEBSD_RELEASE=15.2-BETA3
+scripts/qemu/install.sh
 ```
 
 First boot updates PkgBase, runs nuageinit, and can reboot automatically.
