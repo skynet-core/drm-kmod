@@ -84,3 +84,4 @@ virtio/machine
 virtio/export_syms
 *.kld
 .qemu/
+.clice/

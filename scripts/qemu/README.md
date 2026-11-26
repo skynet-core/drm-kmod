@@ -12,6 +12,9 @@ travels from FreeBSD to the host GPU, see [How graphics works in a FreeBSD 15.1 
 See the [recorded test results and screenshots](results/README.md) for the
 Radeon/NVIDIA KASAN and KMSAN desktop matrix.
 
+For an existing libvirt VM, follow the [virt-manager setup](#libvirt-and-virt-manager-setup-for-sddm-and-hyprland)
+to configure accelerated graphics and absolute pointer tracking.
+
 The Linux host needs KVM access, QEMU with virgl and EGL-headless support,
 OVMF, Bash, Python 3.11+, curl, xz, xorriso and OpenSSH. Screenshot capture
 uses the system Python's GtkVnc 2.0 / Gtk 3 introspection bindings and an
@@ -214,8 +217,8 @@ shutdown -r now
 
 Keep the guest's video console enabled so you can log in through VNC.
 The loader hint stops the base `vtgpu` framebuffer from claiming the
-device. `kld_list` loads the DRM module later, when the system is ready.
-Avoid adding a `virtio_gpu_drm_load` entry to `/boot/loader.conf`.
+device. Use either `kld_list` or `virtio_gpu_drm_load="YES"` in
+`/boot/loader.conf`. The driver registers after the DRM core initializes.
 
 After reboot, `kldstat` should list `virtio_gpu_drm.ko`, and
 `ls -l /dev/dri` should show `card0` and `renderD128`. If the module
@@ -266,6 +269,109 @@ or `softpipe` indicates CPU rendering. Check that QEMU started with a
 `-gl` device and the intended host render node. To switch GPU models or
 host nodes later, shut down the guest before changing `gpu_device` or
 `render_node` in the host terminal.
+
+### Libvirt and virt-manager setup for SDDM and Hyprland
+
+If the SPICE GL viewer stalls or limits frame updates, pair the local
+SPICE console with EGL headless. Virgl still uses the selected host GPU.
+EGL headless keeps command processing independent of SPICE GL draw
+acknowledgements from the viewer. The USB tablet sends absolute pointer
+positions. With the resize helper below, set the SPICE XML mouse mode to
+`server`. Libvirt translates this to QEMU's `agent-mouse=off`, so pointer
+events keep reaching the tablet while the SPICE agent port is open.
+
+1. Shut down the guest. In virt-manager, open the VM on the **QEMU/KVM**
+   system connection (`qemu:///system`).
+2. Under **Edit → Preferences → General**, enable **XML editing**. In the
+   VM window, choose **Show virtual hardware details → Overview → XML**
+   to edit the full domain definition. From a host terminal, the equivalent
+   command for the tested VM is `virsh -c qemu:///system edit freebsd15.1`.
+3. Under `<devices>`, replace the existing SPICE graphics block and add
+   the EGL headless graphics block alongside it. Keep the USB controller
+   and add the USB tablet if one is missing. Use one 3D-enabled virtio
+   video device. If it already exists, preserve its address and other
+   attributes.
+
+```xml
+<input type='tablet' bus='usb'/>
+<graphics type='spice'>
+  <listen type='none'/>
+  <image compression='off'/>
+  <mouse mode='server'/>
+</graphics>
+<graphics type='egl-headless'>
+  <gl rendernode='/dev/dri/renderD129'/>
+</graphics>
+<video>
+  <model type='virtio' heads='1' primary='yes' blob='on' device='virtio-vga-gl'>
+    <acceleration accel3d='yes'/>
+  </model>
+</video>
+```
+
+Set `rendernode` to the **host** render node for your GPU. On the tested
+host, `renderD129` was the RTX 3090 and `renderD128` was the Radeon 610M.
+Use `ls -l /dev/dri/by-path` and `lspci -nn` to identify yours. Select
+`virtio-gpu-gl` for the non-VGA model. The `device` attribute requires libvirt 12.5 or newer.
+[Libvirt domain XML reference](https://libvirt.org/formatdomain.html#graphical-framebuffers)
+
+Click **Apply**, start the VM, and open its graphical console. In the guest,
+`dmesg | grep -i 'QEMU USB Tablet'` should show the tablet attached to
+`hms0`. In Hyprland, run `hyprctl devices` and look for
+`qemu-qemu-usb-tablet` under mice. Move the viewer pointer between two
+corners and back. The guest pointer should return to the same position.
+
+Install SDDM and Xorg in the guest, add `sddm` and the desktop user to the
+`video` group, and enable `sddm`, `seatd`, and `dbus` in `rc.conf`. Use
+SDDM's X11 greeter and select Hyprland from its session menu. Xorg should
+report `glamor X acceleration enabled on virgl` in `Xorg.0.log`. Inside
+Hyprland, use `glmark2-wayland` to check that the renderer names the same
+host GPU.
+
+#### Resize the Hyprland desktop with the viewer
+
+Enable **View → Scale Display → Auto resize VM with window** in the
+virt-manager console. The [FreeBSD session helper](spice-hypr-resize.c)
+opens the SPICE port and advertises support for monitor configuration.
+QEMU publishes the requested size as the virtual monitor's preferred
+mode. On a FreeBSD DRM hotplug event, the helper applies that mode to
+Hyprland. This setup uses one virtual display on `/dev/dri/card0` and
+dedicates the SPICE agent channel to resizing.
+
+Under the domain's `<devices>`, keep one SPICE agent channel.
+
+```xml
+<channel type='spicevmc'>
+  <target type='virtio' name='com.redhat.spice.0'/>
+</channel>
+```
+
+In the guest, run these commands as root from the repository root.
+Replace `vasyl` with the desktop login. The ownership rule grants that
+user access to the named channel at boot.
+
+```sh
+pkg install libdrm spice-protocol
+cc -O2 -I/usr/local/include -I/usr/local/include/libdrm -I/usr/local/include/spice-1 \
+    -L/usr/local/lib scripts/qemu/spice-hypr-resize.c -ldrm -lm -o /tmp/spice-hypr-resize
+install -m 555 /tmp/spice-hypr-resize /usr/local/libexec/spice-hypr-resize
+chown vasyl /dev/vtcon/com.redhat.spice.0
+echo 'own vtcon/com.redhat.spice.0 vasyl' >> /etc/devfs.conf
+```
+
+Add this to the desktop user's `~/.config/hypr/hyprland.lua` and log in
+to Hyprland. Use `2` for a host screen at 200% scale or `1` for 100%.
+
+```lua
+hl.on("hyprland.start", function()
+    hl.exec_cmd("/usr/local/libexec/spice-hypr-resize 2")
+end)
+```
+
+Toggle fullscreen and run `hyprctl monitors` in the guest after each
+transition. On a 3840×2160 host screen at 200%, fullscreen should report
+3840×2160 with scale 2. Leaving fullscreen should select the viewer's
+windowed pixel dimensions.
 
 ## Build and deploy
 

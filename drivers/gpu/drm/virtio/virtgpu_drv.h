@@ -244,6 +244,7 @@ struct virtio_gpu_device {
 	/* current display info */
 	spinlock_t display_info_lock;
 	bool display_info_pending;
+	bool hotplug_disabled;
 
 	struct virtio_gpu_fence_driver fence_drv;
 
@@ -260,6 +261,7 @@ struct virtio_gpu_device {
 	struct drm_mm host_visible_mm;
 
 	struct work_struct config_changed_work;
+	struct work_struct hotplug_work;
 
 	struct work_struct obj_free_work;
 	spinlock_t obj_free_lock;

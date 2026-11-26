@@ -67,18 +67,16 @@ claims the device at boot.  Disable it and let this driver take over:
    seatd_enable="YES"
    ```
 
-   With the modules in /boot/modules, `kld_list="virtio_gpu_drm"`
-   alone suffices - dmabuf.ko and drm.ko load automatically via
-   MODULE_DEPEND.  From any other directory, list all three as
-   absolute paths in the order above.  Load via `kld_list`, not `_load` entries in
-   loader.conf: at loader time DRM core has not initialized yet and
-   the probe fails with -19.
+   With the modules in `/boot/modules`, use `kld_list="virtio_gpu_drm"`
+   in `/etc/rc.conf` or `virtio_gpu_drm_load="YES"` in `/boot/loader.conf`.
+   Module dependencies load `dmabuf.ko` and `drm.ko` automatically. The
+   driver registers with newbus after DRM core initialization. From any
+   other directory, list all three absolute paths in `kld_list` as above.
 
-4. `/etc/rc.local` — the vtgpu hint also disables the newbus child
-   device, so re-enable it after the module is in:
+4. If `/dev/dri/card0` is missing and the `vtgpu` hint disabled the newbus
+   child, re-enable it after loading the module:
 
    ```sh
-   #!/bin/sh
    devctl enable vtgpu0
    ```
 

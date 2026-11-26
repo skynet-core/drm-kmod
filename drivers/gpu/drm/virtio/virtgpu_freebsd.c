@@ -481,8 +481,28 @@ virtio_gpu_drm_modevent(module_t mod __unused, int type, void *arg __unused)
 	}
 }
 
-VIRTIO_DRIVER_MODULE(virtio_gpu_drm, virtio_gpu_drm_driver,
-    virtio_gpu_drm_modevent, NULL);
+/*
+ * Register with newbus after drm_core_init(), which runs in LinuxKPI's
+ * module init phase immediately before SI_SUB_ROOT_CONF. This also orders
+ * the attach correctly when the DRM modules are preloaded by the loader.
+ */
+#define VGD_DRIVER_MODULE(bus) \
+static struct driver_module_data vgd_##bus##_driver_mod = { \
+	.dmd_chainevh = virtio_gpu_drm_modevent, \
+	.dmd_busname = #bus, \
+	.dmd_driver = &virtio_gpu_drm_driver, \
+	.dmd_pass = BUS_PASS_DEFAULT, \
+}; \
+static moduledata_t vgd_##bus##_mod = { \
+	.name = #bus "/virtio_gpu_drm", \
+	.evhand = driver_module_handler, \
+	.priv = &vgd_##bus##_driver_mod, \
+}; \
+DECLARE_MODULE(virtio_gpu_drm_##bus, vgd_##bus##_mod, \
+    SI_SUB_ROOT_CONF, SI_ORDER_FIRST)
+
+VGD_DRIVER_MODULE(virtio_mmio);
+VGD_DRIVER_MODULE(virtio_pci);
 MODULE_VERSION(virtio_gpu_drm, 1);
 MODULE_DEPEND(virtio_gpu_drm, virtio, 1, 1, 1);
 MODULE_DEPEND(virtio_gpu_drm, linuxkpi, 1, 1, 1);

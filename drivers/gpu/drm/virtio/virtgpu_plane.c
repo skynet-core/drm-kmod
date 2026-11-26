@@ -100,16 +100,10 @@ static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
   struct drm_crtc_state *crtc_state;
   struct virtio_gpu_object *bo;
 
-  int ret;
-
   if (!new_plane_state->fb || WARN_ON(!new_plane_state->crtc))
     return 0;
 
-  /*
-   * Ignore damage clips if the framebuffer attached to the plane's state
-   * has changed since the last plane update (page-flip). In this case, a
-   * full plane update should happen because uploads are done per-buffer.
-   */
+  /* Dumb buffer contents are uploaded per resource. */
   bo = gem_to_virtio_gpu_obj(new_plane_state->fb->obj[0]);
   new_plane_state->ignore_damage_clips =
       old_plane_state->fb != new_plane_state->fb && bo->dumb;
@@ -118,10 +112,9 @@ static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
   if (IS_ERR(crtc_state))
     return PTR_ERR(crtc_state);
 
-  ret = drm_atomic_helper_check_plane_state(
+  return drm_atomic_helper_check_plane_state(
       new_plane_state, crtc_state, DRM_PLANE_NO_SCALING, DRM_PLANE_NO_SCALING,
       is_cursor, true);
-  return ret;
 }
 
 static void virtio_gpu_update_dumb_bo(struct virtio_gpu_device *vgdev,
@@ -183,6 +176,7 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
   struct virtio_gpu_output *output = NULL;
   struct virtio_gpu_object *bo;
   struct drm_rect rect;
+  bool needs_scanout;
 
   if (plane->state->crtc)
     output = drm_crtc_to_virtio_gpu_output(plane->state->crtc);
@@ -200,18 +194,28 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
     return;
   }
 
-  if (!drm_atomic_helper_damage_merged(old_state, plane->state, &rect))
-    return;
+  needs_scanout = plane->state->fb != old_state->fb ||
+                  plane->state->src_w != old_state->src_w ||
+                  plane->state->src_h != old_state->src_h ||
+                  plane->state->src_x != old_state->src_x ||
+                  plane->state->src_y != old_state->src_y ||
+                  output->needs_modeset;
+  if (!drm_atomic_helper_damage_merged(old_state, plane->state, &rect)) {
+    struct drm_rect src;
+
+    if (!needs_scanout || !plane->state->visible)
+      return;
+
+    /* Present the new scanout even if all damage was outside its bounds. */
+    src = drm_plane_state_src(plane->state);
+    drm_rect_fp_to_int(&rect, &src);
+  }
 
   bo = gem_to_virtio_gpu_obj(plane->state->fb->obj[0]);
   if (bo->dumb)
     virtio_gpu_update_dumb_bo(vgdev, plane->state, &rect);
 
-  if (plane->state->fb != old_state->fb ||
-      plane->state->src_w != old_state->src_w ||
-      plane->state->src_h != old_state->src_h ||
-      plane->state->src_x != old_state->src_x ||
-      plane->state->src_y != old_state->src_y || output->needs_modeset) {
+  if (needs_scanout) {
     output->needs_modeset = false;
     DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
               bo->hw_res_handle, plane->state->crtc_w, plane->state->crtc_h,

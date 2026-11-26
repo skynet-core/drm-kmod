@@ -48,12 +48,21 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
 				virtio_gpu_cmd_get_edids(vgdev);
 			virtio_gpu_cmd_get_display_info(vgdev);
 			virtio_gpu_notify(vgdev);
-			drm_helper_hpd_irq_event(vgdev->ddev);
 		}
 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
 	}
 	virtio_cwrite_le(vgdev->vdev, struct virtio_gpu_config,
 			 events_clear, &events_clear);
+}
+
+static void virtio_gpu_hotplug_work_func(struct work_struct *work)
+{
+	struct virtio_gpu_device *vgdev =
+		container_of(work, struct virtio_gpu_device, hotplug_work);
+	struct drm_device *dev = vgdev->ddev;
+
+	if (!drm_helper_hpd_irq_event(dev))
+		drm_kms_helper_hotplug_event(dev);
 }
 
 static void virtio_gpu_init_vq(struct virtio_gpu_queue *vgvq,
@@ -152,6 +161,7 @@ int virtio_gpu_init(struct virtio_device *vdev, struct drm_device *dev)
 	INIT_LIST_HEAD(&vgdev->cap_cache);
 	INIT_WORK(&vgdev->config_changed_work,
 		  virtio_gpu_config_changed_work_func);
+	INIT_WORK(&vgdev->hotplug_work, virtio_gpu_hotplug_work_func);
 
 	INIT_WORK(&vgdev->obj_free_work,
 		  virtio_gpu_array_put_free_work);
@@ -283,6 +293,11 @@ static void virtio_gpu_cleanup_cap_cache(struct virtio_gpu_device *vgdev)
 void virtio_gpu_deinit(struct drm_device *dev)
 {
 	struct virtio_gpu_device *vgdev = dev->dev_private;
+
+	spin_lock(&vgdev->display_info_lock);
+	vgdev->hotplug_disabled = true;
+	spin_unlock(&vgdev->display_info_lock);
+	cancel_work_sync(&vgdev->hotplug_work);
 
 	flush_work(&vgdev->obj_free_work);
 	flush_work(&vgdev->ctrlq.dequeue_work);

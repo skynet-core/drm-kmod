@@ -667,11 +667,11 @@ static void virtio_gpu_cmd_get_display_info_cb(struct virtio_gpu_device *vgdev,
 	}
 
 	vgdev->display_info_pending = false;
+	/* Hotplug can take DRM locks held by threads waiting for this queue. */
+	if (!vgdev->hotplug_disabled)
+		schedule_work(&vgdev->hotplug_work);
 	spin_unlock(&vgdev->display_info_lock);
 	wake_up(&vgdev->resp_wq);
-
-	if (!drm_helper_hpd_irq_event(vgdev->ddev))
-		drm_kms_helper_hotplug_event(vgdev->ddev);
 }
 
 static void virtio_gpu_cmd_get_capset_info_cb(struct virtio_gpu_device *vgdev,
