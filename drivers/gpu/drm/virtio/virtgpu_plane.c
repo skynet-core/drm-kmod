@@ -98,6 +98,8 @@ static int virtio_gpu_plane_atomic_check(struct drm_plane *plane,
       drm_atomic_get_old_plane_state(state, plane);
   bool is_cursor = plane->type == DRM_PLANE_TYPE_CURSOR;
   struct drm_crtc_state *crtc_state;
+  struct virtio_gpu_object *bo;
+
   int ret;
 
   if (!new_plane_state->fb || WARN_ON(!new_plane_state->crtc))
