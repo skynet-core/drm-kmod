@@ -12,12 +12,6 @@
 
 #include_next <linux/uaccess.h>
 
-/*
- * LinuxKPI has memdup_user (kmalloc-backed) but not the kvmalloc-backed
- * variant; the difference is irrelevant for this driver's usage.
- */
-#define	vmemdup_user(src, len)	memdup_user((src), (len))
-
 static inline long
 strncpy_from_user(char *dst, const char __user *src, long count)
 {

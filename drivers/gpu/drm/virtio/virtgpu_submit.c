@@ -12,6 +12,9 @@
 #include <linux/file.h>
 #include <linux/sync_file.h>
 #include <linux/uaccess.h>
+#ifdef __FreeBSD__
+#include <linux/string.h>
+#endif
 
 #include <drm/drm_file.h>
 #include <drm/drm_syncobj.h>
@@ -413,7 +416,12 @@ static int virtio_gpu_init_submit(struct virtio_gpu_submit *submit,
 	if (err)
 		return err;
 
+#ifdef __FreeBSD__
+	/* LinuxKPI uses the same allocation for memdup_user and vmemdup_user. */
+	submit->buf = memdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
+#else
 	submit->buf = vmemdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
+#endif
 	if (IS_ERR(submit->buf))
 		return PTR_ERR(submit->buf);
 
