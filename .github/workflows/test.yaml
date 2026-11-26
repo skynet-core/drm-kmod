@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        freebsd_src_ref: ['main', 'stable/15']
+        freebsd_src_ref: ['main', 'stable/15', 'releng/15.2']
         arch: ['x86_64']
         # TODO: Requires FreeBSD 15.1-RELEASE.
         # include:
