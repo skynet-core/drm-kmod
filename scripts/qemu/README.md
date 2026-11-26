@@ -14,6 +14,8 @@ Radeon/NVIDIA KASAN and KMSAN desktop matrix.
 
 For an existing libvirt VM, follow the [virt-manager setup](#libvirt-and-virt-manager-setup-for-sddm-and-hyprland)
 to configure accelerated graphics and absolute pointer tracking.
+For a fixed fullscreen resolution, pointer drift, or a second black X,
+see [resolution and cursor troubleshooting](#troubleshoot-resolution-and-cursor-tracking-in-virt-manager).
 
 The Linux host needs KVM access, QEMU with virgl and EGL-headless support,
 OVMF, Bash, Python 3.11+, curl, xz, xorriso and OpenSSH. Screenshot capture
@@ -368,10 +370,67 @@ hl.on("hyprland.start", function()
 end)
 ```
 
-Toggle fullscreen and run `hyprctl monitors` in the guest after each
-transition. On a 3840×2160 host screen at 200%, fullscreen should report
-3840×2160 with scale 2. Leaving fullscreen should select the viewer's
-windowed pixel dimensions.
+#### Troubleshoot resolution and cursor tracking in virt-manager
+
+**Guest resolution stays the same in fullscreen.** After logging in to
+Hyprland, run `hyprctl monitors` in a guest terminal. Toggle fullscreen,
+then run it again. Under `Virtual-1`, read the active mode and the
+`scale` field. The tested FreeBSD 15.1 VM reported the following
+sizes across two fullscreen cycles.
+
+| Viewer state | Host console area (logical pixels) | Active guest mode (pixels) | Hyprland scale |
+| --- | --- | --- | --- |
+| Windowed | 1480 × 831 | 2960 × 1662 | 2 |
+| Fullscreen | 1920 × 1080 | 3840 × 2160 | 2 |
+
+The windowed dimensions depend on the drawable area inside the viewer.
+If the active mode stays at 1280 × 800, check **Auto resize VM with
+window**, then run `pgrep -fl spice-hypr-resize` and
+`ls -lL /dev/vtcon/com.redhat.spice.0` in the guest. The helper starts
+at Hyprland login and the desktop user needs read/write access to that
+device. The driver signals a connector change after it receives fresh
+display information from QEMU, including when the monitor stays connected.
+The session helper then reads the preferred DRM mode and applies it to
+`Virtual-1`. See the [resize setup](#resize-the-hyprland-desktop-with-the-viewer).
+
+**Pointer accelerates or drifts away.** Run `hyprctl devices` and check
+for `qemu-qemu-usb-tablet` under mice. Move to one spot in the viewer,
+move away, then return to it at a different speed. The guest pointer
+should land at the same spot. In the scale-2 test, returning to viewer
+pixel `(320, 240)` returned Hyprland to logical position `(159, 119)`.
+Use `hyprctl cursorpos` to check the guest coordinates. If it drifts, check the USB tablet and
+`<mouse mode='server'/>` in the [libvirt configuration](#libvirt-and-virt-manager-setup-for-sddm-and-hyprland).
+
+**A black X follows the Hyprland pointer.** Both pointers remained visible
+on `freebsd15.1` after switching Hyprland to hardware cursors. One possible
+source is the cursor image left in SPICE by SDDM's X11 greeter. To test
+this workaround on a guest using Xorg's `modesetting` driver, save the
+following as `/usr/local/etc/X11/xorg.conf.d/30-virtio-spice-cursor.conf`
+in the guest.
+
+```conf
+Section "Device"
+    Identifier "Virtio GPU"
+    Driver "modesetting"
+    Option "SWcursor" "true"
+EndSection
+```
+
+This makes the greeter draw the cursor into its framebuffer. To start
+a fresh SPICE session and load the new setting in Xorg, save
+your work, shut down the guest, and start it again from virt-manager.
+After login, move the pointer and check that only one cursor is visible.
+In `/var/log/Xorg.0.log`, look for `Option "SWcursor" "true"` and
+`glamor X acceleration enabled on virgl`. These lines confirm the greeter
+configuration. The visual check after login determines whether the workaround
+clears the X in your viewer.
+
+**glmark2 slows down during pointer motion.** To repeat the 15.1 Xwayland
+test, run `glmark2 --size 800x600 -b build:duration=7:use-vbo=false` with
+the pointer still, then again while moving it. With EGL headless on the RTX
+3090, glmark2 reported 0.391–0.396 ms per frame while still and
+0.395–0.396 ms during motion. These are application frame times. To check
+what reaches the screen, record the viewer during the same two runs.
 
 ## Build and deploy
 
