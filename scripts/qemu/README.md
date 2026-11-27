@@ -1,13 +1,12 @@
-# FreeBSD virtio GPU development guests
+# FreeBSD 15.2 virtio GPU development guests
 
-These helpers create `freebsd-build` and `freebsd-test` from the official
-FreeBSD 15.1 amd64 BASIC-CLOUDINIT image by default. The compressed image is SHA256
-verified, shared read-only, and backed by separate 100 GB qcow2 overlays.
-Disks, firmware variables, SSH identities, build artifacts and logs live
-under the ignored `.qemu/` directory. Set `QEMU_STATE` to move this directory.
+This guide uses FreeBSD **15.2-BETA3** on amd64 and the `releng/15.2`
+branch of drm-kmod. For a build and test VM pair, follow the quick start
+below. For a single desktop VM, follow the
+[15.2 ISO walkthrough](#freebsd-152-qemu-install-with-virtio-gpu--hyprland).
 
 For a developer's introduction to rendering, display control, and how a draw
-travels from FreeBSD to the host GPU, see [How graphics works in a FreeBSD 15.1 QEMU guest](graphics-stack.md).
+travels from FreeBSD to the host GPU, see [How graphics works in a FreeBSD QEMU guest](graphics-stack.md).
 
 The earlier Radeon/NVIDIA KASAN and KMSAN desktop matrix includes guest
 logs and screenshots. [FreeBSD 15.1 test results](https://github.com/skynet-core/drm-kmod/blob/f97ff2d96d078d43c6df03286f2a48524d5bf5e7/scripts/qemu/results/README.md)
@@ -27,28 +26,29 @@ dependencies are `python3-gobject` and `gtk-vnc2`.
 
 ## Install and run
 
-From the repository root:
+From the repository root, select the pinned 15.2 image and a fresh state
+directory. Keep these exports in the host shell for subsequent commands.
+Each guest gets a 100 GB qcow2 overlay backed by the same SHA256-verified,
+read-only BASIC-CLOUDINIT image.
 
 ```sh
+git switch releng/15.2
+export QEMU_FREEBSD_RELEASE=15.2-BETA3
+export QEMU_STATE="$PWD/.qemu/releng-15.2"
+if test -r /usr/share/OVMF/x64/OVMF_CODE.4m.fd; then
+    export QEMU_FIRMWARE_CODE=/usr/share/OVMF/x64/OVMF_CODE.4m.fd
+    export QEMU_FIRMWARE_VARS=/usr/share/OVMF/x64/OVMF_VARS.4m.fd
+fi
 scripts/qemu/install.sh
 scripts/qemu/run.sh freebsd-build
 RENDER_NODE=/dev/dri/renderD128 GPU_DEVICE=virtio-gpu-gl-pci \
     scripts/qemu/run.sh freebsd-test
 ```
 
-To create fresh 15.2-BETA3 guests in a separate state directory, export
-these values before running the same helpers. Existing disks are reused
-within each state directory.
-
-```sh
-export QEMU_STATE="$PWD/.qemu/releng-15.2" QEMU_FREEBSD_RELEASE=15.2-BETA3
-scripts/qemu/install.sh
-```
-
 First boot updates PkgBase, runs nuageinit, and can reboot automatically.
 Wait for `/var/db/drm-qemu-ready` in each guest. The `freebsd` user belongs
 to `wheel` and `video` and has passwordless sudo. Root and `freebsd` accept
-the dedicated `.qemu/id_ed25519` key; SSH password authentication is disabled.
+the dedicated `$QEMU_STATE/id_ed25519` key; SSH password authentication is disabled.
 SSH and VNC listen only on host loopback.
 
 | Guest | SSH port | VNC port | Default CPUs / memory |
@@ -58,7 +58,7 @@ SSH and VNC listen only on host loopback.
 
 ```sh
 scripts/qemu/ssh.sh freebsd-build 'sudo -n id'
-QEMU_USER=root scripts/qemu/ssh.sh freebsd-test 'id'
+scripts/qemu/ssh.sh freebsd-test 'freebsd-version -kru'
 ```
 
 Set `QEMU_CPUS` / `QEMU_MEMORY` to override sizing. Firmware defaults to
@@ -75,7 +75,7 @@ host render node explicitly; identify the GPU behind a node using
 The guest sees a virtio GPU and normally uses `/dev/dri/renderD128` even
 when the host renderer is `/dev/dri/renderD129`.
 
-## FreeBSD 15.1 QEMU install with virtio-gpu + Hyprland
+## FreeBSD 15.2 QEMU install with virtio-gpu + Hyprland
 
 This walkthrough starts from the FreeBSD installer ISO and builds the
 driver inside one VM. It uses an x86-64 Linux host and configures virgl
@@ -85,22 +85,27 @@ section covers Vulkan with the development VM helpers.
 ### 1. Create and boot the VM (Linux host)
 
 Install QEMU with KVM and virgl/EGL support, `qemu-img`, OVMF (UEFI
-firmware), `curl`, and a VNC viewer. Your host account needs access to
+firmware), Git, `curl`, `xorriso`, and a VNC viewer. Your host account needs access to
 `/dev/kvm` and the selected GPU render node. The example uses
 `/dev/dri/renderD128`. Use `ls -l /dev/dri/by-path` and `lspci -nn` to
 match a render node's PCI address to your Radeon or NVIDIA GPU. The node
 number depends on the host. An empty virtual disk is created in a separate
 directory under `.qemu/`. Download and verify the ISO before booting it.
-[FreeBSD 15.1 installer images and checksums](https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/15.1/)
+[FreeBSD 15.2 installer images and checksums](https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/15.2/)
 
-Run the following from the repository root in a host terminal:
+From the repository root, create a small second CD containing the committed
+driver sources from the local release branch. The guest will build from this CD.
 
 ```sh
-mkdir -p .qemu/freebsd-hyprland
-cd .qemu/freebsd-hyprland
-mirror=https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/15.1
-iso=FreeBSD-15.1-RELEASE-amd64-disc1.iso
-checksums=CHECKSUM.SHA256-FreeBSD-15.1-RELEASE-amd64
+vm_dir="$PWD/.qemu/freebsd-15.2-hyprland"
+mkdir -p "$vm_dir/source-cd"
+git archive --format=tar.gz --prefix=drm-kmod/ -o "$vm_dir/source-cd/driver.tgz" releng/15.2
+cd "$vm_dir"
+xorriso -as mkisofs -quiet -R -o driver.iso source-cd
+
+mirror=https://download.freebsd.org/releases/amd64/amd64/ISO-IMAGES/15.2
+iso=FreeBSD-15.2-BETA3-amd64-disc1.iso
+checksums=CHECKSUM.SHA256-FreeBSD-15.2-BETA3-amd64
 curl -fLO "$mirror/$iso"
 curl -fLO "$mirror/$checksums"
 sha256sum --check --ignore-missing "$checksums"
@@ -112,13 +117,15 @@ distribution if they differ. Each VM needs its own writable
 
 ```sh
 test -e disk.qcow2 || qemu-img create -f qcow2 disk.qcow2 64G
-test -e efi-vars.fd || cp /usr/share/OVMF/OVMF_VARS.fd efi-vars.fd
+firmware_code=${QEMU_FIRMWARE_CODE:-/usr/share/OVMF/x64/OVMF_CODE.4m.fd}
+firmware_vars=${QEMU_FIRMWARE_VARS:-/usr/share/OVMF/x64/OVMF_VARS.4m.fd}
+test -e efi-vars.fd || cp "$firmware_vars" efi-vars.fd
 render_node=/dev/dri/renderD128
 gpu_device=virtio-vga-gl
 
 run_freebsd() {
     qemu-system-x86_64 -machine q35,accel=kvm -cpu host -smp 4 -m 8G \
-        -drive if=pflash,format=raw,unit=0,readonly=on,file=/usr/share/OVMF/OVMF_CODE.fd \
+        -drive "if=pflash,format=raw,unit=0,readonly=on,file=$firmware_code" \
         -drive if=pflash,format=raw,unit=1,file=efi-vars.fd \
         -drive file=disk.qcow2,if=virtio,format=qcow2 \
         -netdev user,id=net0,ipv6=off -device virtio-net-pci,netdev=net0 \
@@ -141,12 +148,12 @@ launching the VM.
 
 1. Boot the default FreeBSD option and choose **Install**. Set your
    keymap and a hostname such as `freebsd-hyprland`.
-2. Choose **Packages (Tech Preview)** for this VM. Choose **Network** if
+2. Choose **Packages** if prompted for the installation type. Choose **Network** if
    offered and accept the default base components. For networking,
    choose `vtnet0`, enable IPv4 DHCP, and skip IPv6. QEMU user networking
    supplies the address and Internet access for packages.
-3. Choose **Auto (UFS)**, select the VM's 64 GB `vtbd0` disk, and use the
-   entire disk with GPT. Confirm the layout and commit the changes.
+3. Choose **Auto (ZFS)** and select a single-disk stripe on the VM's
+   64 GB `vtbd0` disk. The tested 15.2 desktop used ZFS.
    The installer writes to `disk.qcow2` on the host.
 4. Set a root password and add a normal user named `freebsd`. Keep the
    default login group and enter `wheel video` when invited to add
@@ -155,8 +162,8 @@ launching the VM.
    defaults. You can do the whole setup through VNC.
 5. At the end, skip manual configuration and select **Reboot**. The
    installation QEMU process exits because of `-no-reboot`. In the same
-   host terminal, run `run_freebsd` with no arguments and reconnect
-   VNC. This boots the installed disk with the ISO detached.
+   host terminal, run `run_freebsd -cdrom driver.iso -boot order=c` and
+   reconnect VNC. This boots the installed disk with the driver CD attached.
 
 See the [FreeBSD Handbook installer screens](https://docs.freebsd.org/en/books/handbook/bsdinstall/)
 for the menus.
@@ -172,12 +179,13 @@ reboot into the updated kernel. If `pkg` asks to bootstrap itself, accept the pr
 pkg update
 pkg upgrade -r FreeBSD-base
 pkg install -r FreeBSD-base FreeBSD-src FreeBSD-src-sys
-pkg install git hyprland foot dejavu dbus seatd mesa-dri glmark2
+pkg install hyprland foot dejavu dbus seatd mesa-dri glmark2 xwayland
 shutdown -r now
 ```
 
 After the reboot, log in as `freebsd` again and check the running kernel
-and sources. The outputs from `freebsd-version -k` (installed kernel) and
+and sources. The running kernel should report `15.2-` followed by its
+release stage. The outputs from `freebsd-version -k` (installed kernel) and
 `freebsd-version -r` (running kernel) should match. The two kernel and
 source package versions should also match each other. Stop and resolve
 any mismatch before building. Reboot if the installed kernel is newer
@@ -191,10 +199,12 @@ pkg query '%n %v' FreeBSD-kernel-generic FreeBSD-src-sys
 test -r /usr/src/sys/conf/kern.opts.mk
 ```
 
-Build as `freebsd` using the guest's FreeBSD `make` and compiler:
+Mount the driver CD as root. Run the extraction and build as `freebsd` so
+that the build tree belongs to the desktop user.
 
 ```sh
-git clone --depth 1 --branch virtio-gpu-nvidia https://github.com/skynet-core/drm-kmod.git ~/drm-kmod
+su - root -c 'mount_cd9660 -o ro /dev/cd0 /mnt'
+tar -xzf /mnt/driver.tgz -C "$HOME"
 cd ~/drm-kmod
 make -j "$(sysctl -n hw.ncpu)" SYSDIR=/usr/src/sys KMODS="dmabuf drm virtio"
 ```
@@ -298,7 +308,8 @@ events keep reaching the tablet while the SPICE agent port is open.
 2. Under **Edit → Preferences → General**, enable **XML editing**. In the
    VM window, choose **Show virtual hardware details → Overview → XML**
    to edit the full domain definition. From a host terminal, the equivalent
-   command for the tested VM is `virsh -c qemu:///system edit freebsd15.1`.
+   command is `virsh -c qemu:///system edit freebsd15.2` if your domain
+   is named `freebsd15.2`. Use `virsh -c qemu:///system list --all` to find its name.
 3. Under `<devices>`, replace the existing SPICE graphics block and add
    the EGL headless graphics block alongside it. Keep the USB controller
    and add the USB tablet if one is missing. Use one 3D-enabled virtio
@@ -386,13 +397,11 @@ end)
 **Guest resolution stays the same in fullscreen.** After logging in to
 Hyprland, run `hyprctl monitors` in a guest terminal. Toggle fullscreen,
 then run it again. Under `Virtual-1`, read the active mode and the
-`scale` field. The tested FreeBSD 15.1 VM reported the following
-sizes across two fullscreen cycles.
-
-| Viewer state | Host console area (logical pixels) | Active guest mode (pixels) | Hyprland scale |
-| --- | --- | --- | --- |
-| Windowed | 1480 × 831 | 2960 × 1662 | 2 |
-| Fullscreen | 1920 × 1080 | 3840 × 2160 | 2 |
+`scale` field. In the 15.2-BETA3 test the client requested 1920 × 1200,
+3840 × 2160, then 2960 × 1662. Hyprland reported each requested mode at
+scale 2. For example, on a 3840 × 2160 host display at 200%, a fullscreen
+viewer can occupy 1920 × 1080 logical pixels while the guest mode is
+3840 × 2160.
 
 The windowed dimensions depend on the drawable area inside the viewer.
 If the active mode stays at 1280 × 800, check **Auto resize VM with
@@ -412,8 +421,8 @@ pixel `(320, 240)` returned Hyprland to logical position `(159, 119)`.
 Use `hyprctl cursorpos` to check the guest coordinates. If it drifts, check the USB tablet and
 `<mouse mode='server'/>` in the [libvirt configuration](#libvirt-and-virt-manager-setup-for-sddm-and-hyprland).
 
-**A black X follows the Hyprland pointer.** Both pointers remained visible
-on `freebsd15.1` after switching Hyprland to hardware cursors. One possible
+**A black X follows the Hyprland pointer.** The 15.2 test started Hyprland
+directly. For a session started through SDDM, one possible
 source is the cursor image left in SPICE by SDDM's X11 greeter. To test
 this workaround on a guest using Xorg's `modesetting` driver, save the
 following as `/usr/local/etc/X11/xorg.conf.d/30-virtio-spice-cursor.conf`
@@ -436,12 +445,12 @@ In `/var/log/Xorg.0.log`, look for `Option "SWcursor" "true"` and
 configuration. The visual check after login determines whether the workaround
 clears the X in your viewer.
 
-**glmark2 slows down during pointer motion.** To repeat the 15.1 Xwayland
+**glmark2 slows down during pointer motion.** To repeat the 15.2 Xwayland
 test, run `glmark2 --size 800x600 -b build:duration=7:use-vbo=false` with
 the pointer still, then again while moving it. With EGL headless on the RTX
-3090, glmark2 reported 0.391–0.396 ms per frame while still and
-0.395–0.396 ms during motion. These are application frame times. To check
-what reaches the screen, record the viewer during the same two runs.
+3090, glmark2 reported 0.857 ms per frame while still and 0.851 ms during
+motion. The test also recorded SPICE display updates and tablet positions.
+[15.2 resize, pointer, and frame timing results](releng-15.2/README.md#spice-resolution-and-pointer-motion)
 
 Small cursor movements can damage only a small region of the desktop.
 The virtio driver uses that region for accelerated framebuffers and still
@@ -449,17 +458,10 @@ presents a newly selected framebuffer when its damage falls outside the
 visible area. Switching to a different CPU-backed dumb buffer triggers a
 full update because each buffer has its own uploaded contents.
 
-The fresh 15.2-BETA3 guest also applied SPICE requests for 1920 × 1200,
-3840 × 2160, and 2960 × 1662 at scale 2. Returning to the same tablet
-position produced the same guest coordinates. The test recorded each
-SPICE display update and tablet position during the benchmark.
-[15.2 resize, pointer, and frame timing results](releng-15.2/README.md#spice-resolution-and-pointer-motion)
-
 ## Build and deploy
 
 ```sh
 scripts/qemu/build.sh generic
-QEMU_USER=root scripts/qemu/ssh.sh freebsd-test 'sh -s' < scripts/qemu/guest-setup.sh
 scripts/qemu/deploy.sh generic
 ```
 
@@ -490,6 +492,16 @@ changing configurations. Deployment of `generic` selects the stock kernel
 again. Do not upgrade guest base packages between building and testing.
 
 ## Desktop tests and screenshots
+
+For the 15.2 checks on Hyprland 0.57, use the Lua configuration in
+step 5 and the [qualification commands](releng-15.2/README.md#reproduce-the-graphics-checks).
+The older matrix below uses a Hyprland 0.56 configuration and requires
+the Plasma Wayland and X11 packages listed in `guest-setup.sh`. Prepare
+that test environment with:
+
+```sh
+QEMU_USER=root scripts/qemu/ssh.sh freebsd-test 'sh -s' < scripts/qemu/guest-setup.sh
+```
 
 Copy the session helpers into the test user's home once (repeat after edits):
 

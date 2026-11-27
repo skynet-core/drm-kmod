@@ -5,7 +5,7 @@ application chooses the vertices and colors, a GPU turns them into pixels,
 and the desktop puts the window on the screen. In this setup the **guest**
 is the FreeBSD VM, the **host** is the Linux machine running QEMU, and the
 physical GPU belongs to the host. This guide follows that triangle across
-the boundary. To build the VM first, use the [installation walkthrough](README.md#freebsd-151-qemu-install-with-virtio-gpu--hyprland).
+the boundary. To build the VM first, use the [installation walkthrough](README.md#freebsd-152-qemu-install-with-virtio-gpu--hyprland).
 
 ## From a draw call to a visible window
 
