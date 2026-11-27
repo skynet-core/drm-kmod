@@ -2,8 +2,6 @@
  * SPDX-License-Identifier: MIT
  *
  * Copyright (c) 2026 Denis Borovikov <denis.borovikov@gmail.com>
- *
- * uuid_t, which base LinuxKPI lacks (it only carries guid_t).
  */
 
 #ifndef _VIRTGPU_SHIM_LINUX_UUID_H
@@ -11,7 +9,8 @@
 
 #include_next <linux/uuid.h>
 
-/* LinuxKPI defines UUID_SIZE but not the uuid_t type itself. */
+/* Newer LinuxKPI maps uuid_t to its Linux-compatible type. */
+#ifndef uuid_t
 typedef struct {
 	__u8 b[UUID_SIZE];
 } lkpi_shim_uuid_t;
@@ -28,5 +27,6 @@ import_uuid(uuid_t *dst, const __u8 *src)
 {
 	memcpy(dst->b, src, UUID_SIZE);
 }
+#endif
 
 #endif /* _VIRTGPU_SHIM_LINUX_UUID_H */

@@ -10,8 +10,9 @@ travels from FreeBSD to the host GPU, see [How graphics works in a FreeBSD QEMU 
 
 The earlier Radeon/NVIDIA KASAN and KMSAN desktop matrix includes guest
 logs and screenshots. [FreeBSD 15.1 test results](https://github.com/skynet-core/drm-kmod/blob/f97ff2d96d078d43c6df03286f2a48524d5bf5e7/scripts/qemu/results/README.md)
-The [FreeBSD 15.2 qualification](releng-15.2/README.md) records the release
-kernel and DRM source revisions and compares hardware rendering with `stable/15`.
+Local test reports live under the Git-ignored `scripts/qemu/results/` directory.
+The 15.2 run recorded its kernel and DRM revisions, screenshots, and
+`stable/15` comparison in `results/releng-15.2/README.md`.
 
 For an existing libvirt VM, follow the [virt-manager setup](#libvirt-and-virt-manager-setup-for-sddm-and-hyprland)
 to configure accelerated graphics and absolute pointer tracking.
@@ -179,7 +180,7 @@ reboot into the updated kernel. If `pkg` asks to bootstrap itself, accept the pr
 pkg update
 pkg upgrade -r FreeBSD-base
 pkg install -r FreeBSD-base FreeBSD-src FreeBSD-src-sys
-pkg install hyprland foot dejavu dbus seatd mesa-dri glmark2 xwayland
+pkg install hyprland kitty dejavu dbus seatd mesa-dri glmark2 xwayland
 shutdown -r now
 ```
 
@@ -449,8 +450,8 @@ clears the X in your viewer.
 test, run `glmark2 --size 800x600 -b build:duration=7:use-vbo=false` with
 the pointer still, then again while moving it. With EGL headless on the RTX
 3090, glmark2 reported 0.857 ms per frame while still and 0.851 ms during
-motion. The test also recorded SPICE display updates and tablet positions.
-[15.2 resize, pointer, and frame timing results](releng-15.2/README.md#spice-resolution-and-pointer-motion)
+motion. The local trace of SPICE display updates and tablet positions is
+`results/releng-15.2/spice-events.csv.gz`.
 
 Small cursor movements can damage only a small region of the desktop.
 The virtio driver uses that region for accelerated framebuffers and still
@@ -493,8 +494,18 @@ again. Do not upgrade guest base packages between building and testing.
 
 ## Desktop tests and screenshots
 
-For the 15.2 checks on Hyprland 0.57, use the Lua configuration in
-step 5 and the [qualification commands](releng-15.2/README.md#reproduce-the-graphics-checks).
+For the 15.2 checks on Hyprland 0.57, start the session from step 5.
+With `pkgconf` and `mesa-demos` installed, run the following from the
+repository root in a guest terminal:
+
+```sh
+cc -Wall -Wextra -Werror scripts/qemu/render-smoke.c -o /tmp/render-smoke \
+    $(pkgconf --cflags --libs egl gbm glesv2)
+/tmp/render-smoke /dev/dri/renderD128
+glxinfo -B
+glmark2-wayland --size 640x480 -b build:use-vbo=true:duration=3
+```
+
 The older matrix below uses a Hyprland 0.56 configuration and requires
 the Plasma Wayland and X11 packages listed in `guest-setup.sh`. Prepare
 that test environment with:

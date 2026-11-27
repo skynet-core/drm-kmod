@@ -107,7 +107,7 @@ struct virtio_driver {
 /* LinuxKPI's MODULE_DEVICE_TABLE() needs a per-bus suffix macro. */
 #define	MODULE_DEVICE_TABLE_BUS_virtio(_bus, _table)
 
-#ifndef	pci_is_vga
+#ifdef VIRTGPU_NEED_PCI_IS_VGA
 /* virtio-vga and virtio-gpu-pci have different display subclasses. */
 #define	pci_is_vga(pdev)	(((pdev)->class >> 8) == PCI_CLASS_DISPLAY_VGA)
 #endif

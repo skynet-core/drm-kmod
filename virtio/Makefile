@@ -58,6 +58,16 @@ CFLAGS+= -I${.CURDIR:H}/linuxkpi/bsd/include
 CFLAGS+= -I${SYSDIR}/compat/linuxkpi/common/include
 CFLAGS+= -I${SYSDIR}/compat/linuxkpi/dummy/include
 
+# These inline functions landed without a __FreeBSD_version bump. Check
+# the target kernel headers so snapshots and backports get the right shim.
+.for header helper in pci pci_is_vga uaccess strncpy_from_user
+_has_helper!=	awk '/^[[:blank:]]*${helper}[[:blank:]]*\(/ { found=1 } END { print found+0 }' \
+		    ${SYSDIR}/compat/linuxkpi/common/include/linux/${header}.h
+.if ${_has_helper} == 0
+CFLAGS+=	-DVIRTGPU_NEED_${helper:tu}
+.endif
+.endfor
+
 CFLAGS+= -I${.CURDIR:H}/include
 CFLAGS+= -I${.CURDIR:H}/include/uapi
 CFLAGS+= -I${SRCDIR:H:H}		# <drm/drm_os_freebsd.h>
